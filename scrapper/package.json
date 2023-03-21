@@ -1,0 +1,14 @@
+{
+  "name": "scrapper",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {}
+}
