@@ -1,7 +1,8 @@
 export interface Class {
     name: string;
-    id: number;
-    description: number;
+    id: string;
+    credits: number;
+    description: string;
     prerequisites: number[]; // list of class # ids
 }
 
@@ -26,8 +27,8 @@ export interface Professor {
 
 export enum SectionType {
     lecture,
-    discussion,
-    lab
+    discussion, colloquium, study,
+    lab, seminar
 }
 export interface Enrollment {
     id: number;
@@ -41,14 +42,15 @@ export enum Season {
 }
 
 export interface Section {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     year: number;
     season: Season;
-    classId: number;
+    id: number;
+    classId: string;
     type: SectionType;
     days: number[];
     location: string;
-    professorId: number;
+    professorId: string;
 }
 
