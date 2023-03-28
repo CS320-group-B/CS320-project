@@ -21,5 +21,27 @@ const addCourse = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 };
+// @desc    Update existing course
+const updateCourse = async (req, res) => { 
+    try{
+        Course.findOneAndUpdate({_id: req.params.id}, req.body);
+        res.status(200);
+    } catch (error){
+        res.status(404).json({ message: error.message})
+    }
+};
+// @desc    Delete Existing Course
+const deleteCourse = async (req, res) => {
+    try{
+        const course = Course.findOneAndRemove({ _id: req.params.id});
+        if (course === null){
+            res.status(200).json(course);   // Entry found and deleted
+        }else{
+            res.status(204);                // Entry not found in database
+        }
+    } catch (error){
+        res.status(409).json({ message: error.message})
+    }
+};
 
-module.exports = { getCourses, addCourse };
+module.exports = { getCourses, addCourse, updateCourse, deleteCourse};
