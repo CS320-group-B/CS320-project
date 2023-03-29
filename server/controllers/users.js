@@ -33,7 +33,7 @@ const addUser = async (req, res) => {
 // @desc    Update existing user
 const updateUser = async (req, res) => { 
     try{
-        Course.findOneAndUpdate({_id: req.params.id}, req.body);
+        User.findOneAndUpdate({_id: req.params.id}, req.body);
         res.status(200);
     } catch (error){
         res.status(404).json({ message: error.message})
@@ -42,9 +42,9 @@ const updateUser = async (req, res) => {
 // @desc    Delete Existing User
 const deleteUser = async (req, res) => {
     try{
-        const course = Course.findOneAndRemove({ _id: req.params.id});
-        if (course === null){
-            res.status(200).json(course);   // Entry found and deleted
+        const user = User.findOneAndRemove({ _id: req.params.id});
+        if (User === null){
+            res.status(200).json(user);   // Entry found and deleted
         }else{
             res.status(204);                // Entry not found in database
         }
