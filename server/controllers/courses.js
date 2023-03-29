@@ -40,7 +40,7 @@ const deleteCourse = async (req, res) => {
             res.status(204);                // Entry not found in database
         }
     } catch (error){
-        res.status(409).json({ message: error.message})
+        res.status(400).json({ message: error.message})
     }
 };
 
