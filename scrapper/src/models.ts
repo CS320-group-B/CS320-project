@@ -1,9 +1,12 @@
-export interface Class {
+export interface Course {
     name: string;
     id: string;
     credits: number;
+    number: string;
+    professors: string[];
+    subject: string;
     description: string;
-    prerequisites: number[]; // list of class # ids
+    prerequisites: { options: string[] }[]; // list of class # ids
 }
 
 export interface Track {
@@ -51,6 +54,6 @@ export interface Section {
     type: SectionType;
     days: number[];
     location: string;
-    professorId: string;
+    professors: string[];
 }
 
