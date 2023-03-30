@@ -10,6 +10,16 @@ const getCourses = async (req, res) => {
     }
 };
 
+// @ Get a course with a specific id
+const getCourse = async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id);
+        res.status(200).json(course);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
+
 // @desc    Add a course
 const addCourse = async (req, res) => {
     const course = req.body;
@@ -44,4 +54,4 @@ const deleteCourse = async (req, res) => {
     }
 };
 
-module.exports = { getCourses, addCourse, updateCourse, deleteCourse};
+module.exports = { getCourses, getCourse, addCourse, updateCourse, deleteCourse};

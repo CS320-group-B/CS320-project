@@ -12,6 +12,6 @@ const courseSchema = mongoose.Schema({
 });
 // TODO: refactor to use sections Schema
 
-const Course = mongoose.model('courses', courseSchema);
+const Course = mongoose.model('Course', courseSchema)
 
 module.exports = Course;
