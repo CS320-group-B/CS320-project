@@ -16,7 +16,12 @@ const getUsers = async (req, res) => {
 
 //@desc get User
 const getUser = async(req,res) =>{
-    const user = req.body;
+    try {
+        const user = await User.findById(req.params.id);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
     
 }
 
