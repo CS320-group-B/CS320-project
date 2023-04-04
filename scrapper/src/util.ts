@@ -54,3 +54,12 @@ export async function fetchCICSPage(url: string, errorMessgae: string): Promise<
 
     }
 }
+
+export function multiIncludes(str: string, substrings: string[]): boolean {
+    for (const substring of substrings) {
+        if (str.includes(substring)) {
+            return true;
+        }
+    }
+    return false;
+}

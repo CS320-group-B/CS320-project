@@ -22,9 +22,23 @@ export interface Student {
 }
 
 export interface Professor {
-    name: string;
-    id: number;
-    email: string;
+    name: { first: string, last: string };
+    id: string;
+    email: string | null;
+    phone: string | null;
+    office: string | null;
+    website: string | null;
+    webpage: string | null;
+    courses: string[];
+    activities: string[];
+    biography: string | null;
+
+    research: string | null;
+    rating: number | null;
+    difficulty: number | null;
+    reviews: number | null;
+    tags: string[];
+
 }
 
 
