@@ -1,0 +1,50 @@
+#schedule-container {
+    display: flex;
+    margin: 0 50px 0 50px;
+}
+
+.date {
+    background-color: rgb(193, 200, 193);
+    width: 20%;
+    padding: 0;
+}
+
+.date .title {
+    background-color: rgb(113, 123, 113);
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 8px 0px;
+    border: 1px black solid;
+}
+
+.course-list {
+    margin: 0px;
+    padding: 0px;
+    border: 1px black solid;
+}
+
+.course {
+    background-color: rgb(122, 195, 122);
+    padding: 5px 8px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+}
+
+.course-name {
+    font-weight: bold;
+    font-size: 20px;
+    height: 33%;
+}
+
+.course-time {
+    height: 33%;
+}
+
+.course-room {
+    height: 33%;
+}

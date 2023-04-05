@@ -1,0 +1,22 @@
+#nav {
+    background-color: rgb(102, 127, 139);
+	width: 100%;
+	float: top;
+	margin: 0 0 0 0;
+	padding: 0;
+	list-style: none;
+    display: flex;}
+
+
+#nav li {
+    border-left: 1px solid black;
+     }
+
+#nav li a {
+		display: block;
+        float: right;
+		padding: 8px 15px;
+		text-decoration: none;
+		font-weight: bold;
+		color: rgb(180, 218, 237);
+		border-right: 1px solid #ccc; }
