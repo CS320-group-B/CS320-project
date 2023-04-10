@@ -10,7 +10,7 @@ import {
     Link
   } from "@mui/material";
 
-const Signin = () => {
+const Signup = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -99,4 +99,4 @@ const Signin = () => {
           </Container>
       );
 }
-export default Signin;
+export default Signup;

@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom'
 
 function Navbar() {
   const location = useLocation();
-  const routes = [{ name: 'Home', path: '/' }, { name: 'My Schedules', path: '/Schedule' }, { name: 'Profile', path: '/Profile' }, { name: 'Track', path: '/Track' }, { name: 'Login', path: '/Login' },{ name: 'Signin', path: '/Signin' }];
+  const routes = [{ name: 'Home', path: '/' }, { name: 'My Schedules', path: '/Schedule' }, { name: 'Profile', path: '/Profile' }, { name: 'Track', path: '/Track' }, { name: 'Login', path: '/Login' },{ name: 'Signup', path: '/Signup' }];
   return (
     <div>
       <ul id="nav" className="py-4 shadow-md flex px-6">

@@ -5,7 +5,7 @@ import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Schedule from "./components/Schedule/Schedule";
 import Login from "./components/Login/Login";
-import Signin from "./components/Signin/Signin";
+import Signup from "./components/Signup/Signup";
 
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/track" element={<Flow />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
 
       </Routes>
 
