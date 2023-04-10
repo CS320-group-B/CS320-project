@@ -1,4 +1,4 @@
-const Course = require('../models/course.js'); // import the Course mongoose model
+const { Course } = require('../models/course.js'); // import the Course mongoose model
 
 // @desc    Get all courses
 const getCourses = async (req, res) => {
@@ -33,24 +33,23 @@ const addCourse = async (req, res) => {
 };
 // @desc    Update existing course
 const updateCourse = async (req, res) => { 
-    try{
-        Course.findOneAndUpdate({_id: req.params.id}, req.body);
-        res.status(200);
-    } catch (error){
-        res.status(404).json({ message: error.message})
+    try {
+        const updatedCourse = await Course.findOneAndUpdate({_id: req.params.id}, req.body , {new: true});
+        res.status(200).json(updatedCourse);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
     }
 };
 // @desc    Delete Existing Course
 const deleteCourse = async (req, res) => {
-    try{
-        const course = Course.findOneAndRemove({ _id: req.params.id});
-        if (course === null){
-            res.status(200).json(course);   // Entry found and deleted
-        }else{
-            res.status(204);                // Entry not found in database
-        }
-    } catch (error){
-        res.status(400).json({ message: error.message})
+    try {
+        const course = await Course.findOneAndRemove({_id: req.params.id});
+
+        if (!course) return res.status(204).json({ message: "Course not found" }); // Entry not found in database
+
+        res.status(200).json({ message: "Course deleted successfully" }); // Entry found and deleted
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 };
 

@@ -7,11 +7,9 @@ const courseSchema = mongoose.Schema({
     frequency: String,
     subject: String,
     description: String,
-    startTime: Number,
-    endTime: Number
+    prerequisites: [String]
 });
-// TODO: refactor to use sections Schema
 
 const Course = mongoose.model('Course', courseSchema)
 
-module.exports = Course;
+module.exports = { Course, courseSchema };

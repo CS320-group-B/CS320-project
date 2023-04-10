@@ -1,12 +1,12 @@
-const Course = require('./course.js');
+const {courseSchema} = require('./course.js');
 
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     email: { type: String, required: true},
     password: { type: String, required: true},
-    taken: [Course], 
-    planned: [Course],
+    taken: [courseSchema], 
+    planned: [courseSchema],
     id: { type: String }
 });
 

@@ -7,16 +7,21 @@ const User = require('../models/user.js');
 const getUsers = async (req, res) => {
     try {
         const users = await User.find();
-        res.status(207).json(users); //not rly sure what status num should be\
+        res.status(200).json(users); 
     } catch (error){
-        res.status(405).json({message: error.message}); //not sure about number
+        res.status(404).json({message: error.message}); 
     }
 
 }
 
 //@desc get User
 const getUser = async(req,res) =>{
-    const user = req.body;
+    try {
+        const user = await User.findById(req.params.id);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
     
 }
 
@@ -26,10 +31,10 @@ const addUser = async (req, res) => {
     const newUser = new User(user);
     try{
         await newUser.save();
-        res.status(208).json(newCourse);
+        res.status(201).json(newCourse);
 
     } catch (error){
-        res.status(410).json({message: error.message});
+        res.status(409).json({message: error.message});
     }
 
 }
@@ -44,15 +49,14 @@ const updateUser = async (req, res) => {
 };
 // @desc    Delete Existing User
 const deleteUser = async (req, res) => {
-    try{
-        const user = User.findOneAndRemove({ _id: req.params.id});
-        if (User === null){
-            res.status(200).json(user);   // Entry found and deleted
-        }else{
-            res.status(204);                // Entry not found in database
-        }
-    } catch (error){
-        res.status(400).json({ message: error.message})
+    try {
+        const user = await User.findOneAndRemove({_id: req.params.id});
+        
+        if (!user) return res.status(204).json({ message: "User not found" });
+
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
     }
 };
 
@@ -72,30 +76,32 @@ const signin = async (req, res) => {
 
         res.status(200).json({ result: existingUser, token });
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong." });
+        res.status(500).json({ message: error.message });
     }
 
 }
 
 const signup = async (req, res) => {
-    const { email, password, confirmPassword, firstName, lastName } = req.body;
+    const { email, password, confirmPassword } = req.body;        
 
     try {
+        if (!email || !password || !confirmPassword) return res.status(400).json({ message: "Please enter all fields." });
+
         const existingUser = await User.findOne({ email });
 
-        if (existingUser) return res.status(400).json({ message: "User already exists." });
+        if (existingUser) return res.status(409).json({ message: "User already exists." });
 
         if (password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match." });
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const result = await User.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` });
+        const result = await User.create({ email, password: hashedPassword });
 
         const token = jwt.sign({ email: result.email, id: result._id}, 'test', { expiresIn: "1h" });
 
-        res.status(200).json({ result, token });
+        res.status(201).json({ result, token });
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong." });
+        res.status(500).json({ message: error.message});
     }
 }
 
