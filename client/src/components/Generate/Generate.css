@@ -1,0 +1,17 @@
+
+
+#generate-container {
+    margin: 25px 200px 25px 200px;
+}
+
+.labelSelect + .labelSelect { 
+    margin-top: 20px; 
+}
+
+.labelSelect {
+    width: 40%;
+}
+
+button {
+    margin-top: 40px; 
+}
