@@ -1,9 +1,12 @@
-export interface Class {
+export interface Course {
     name: string;
     id: string;
     credits: number;
+    number: string;
+    professors: string[];
+    subject: string;
     description: string;
-    prerequisites: number[]; // list of class # ids
+    prerequisites: { options: string[] }[]; // list of class # ids
 }
 
 export interface Track {
@@ -19,9 +22,23 @@ export interface Student {
 }
 
 export interface Professor {
-    name: string;
-    id: number;
-    email: string;
+    name: { first: string, last: string };
+    id: string;
+    email: string | null;
+    phone: string | null;
+    office: string | null;
+    website: string | null;
+    webpage: string | null;
+    courses: string[];
+    activities: string[];
+    biography: string | null;
+
+    research: string | null;
+    rating: number | null;
+    difficulty: number | null;
+    reviews: number | null;
+    tags: string[];
+
 }
 
 
@@ -51,6 +68,6 @@ export interface Section {
     type: SectionType;
     days: number[];
     location: string;
-    professorId: string;
+    professors: string[];
 }
 
