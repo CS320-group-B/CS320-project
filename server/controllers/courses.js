@@ -34,7 +34,8 @@ const addCourse = async (req, res) => {
 // @desc    Update existing course
 const updateCourse = async (req, res) => { 
     try {
-        const updatedCourse = await Course.findOneAndUpdate({_id: req.params.id}, req.body , {new: true});
+        const updatedCourse = await Course.findOneAndUpdate({"_id": req.params.id}, req.body , {new: true});
+        if (!updatedCourse){return res.status(404).json("Course not found");}
         res.status(200).json(updatedCourse);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -43,7 +44,7 @@ const updateCourse = async (req, res) => {
 // @desc    Delete Existing Course
 const deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findOneAndRemove({_id: req.params.id});
+        const course = await Course.findOneAndRemove({"_id": req.params.id});
 
         if (!course) return res.status(204).json({ message: "Course not found" }); // Entry not found in database
 
