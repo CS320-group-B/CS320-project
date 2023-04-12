@@ -1,6 +1,6 @@
 export interface Course {
     name: string;
-    id: string;
+    key: string;
     credits: number;
     number: string;
     professors: string[];
@@ -23,29 +23,32 @@ export interface Student {
 
 export interface Professor {
     name: { first: string, last: string };
-    id: string;
+    key: string;
+    avatar: string | null;
     email: string | null;
     phone: string | null;
     office: string | null;
     website: string | null;
     webpage: string | null;
-    courses: string[];
     activities: string[];
     biography: string | null;
-
     research: string | null;
     rating: number | null;
     difficulty: number | null;
     reviews: number | null;
-    tags: string[];
 
+}
+
+export interface ProfessorLink {
+    name: { first: string, last: string };
+    key: string;
 }
 
 
 export enum SectionType {
-    lecture,
-    discussion, colloquium, study,
-    lab, seminar
+    lecture = 'lecture',
+    discussion = 'discussion', colloquium = 'colloquium', study = 'study',
+    lab = 'lab', seminar = 'seminar'
 }
 export interface Enrollment {
     id: number;
@@ -55,7 +58,7 @@ export interface Enrollment {
 }
 
 export enum Season {
-    fall, spring, winter, summer
+    fall = 'fall', spring = 'spring', winter = 'winter', summer = 'summer'
 }
 
 export interface Section {
@@ -63,8 +66,8 @@ export interface Section {
     end: string;
     year: number;
     season: Season;
-    id: number;
-    classId: string;
+    key: number;
+    courseKey: string;
     type: SectionType;
     days: number[];
     location: string;

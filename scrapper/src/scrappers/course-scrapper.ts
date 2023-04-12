@@ -1,9 +1,11 @@
-import { Season, Course } from "./models";
-import { fetchCICSPage, getSeasonName } from "./util";
 import * as cheerio from 'cheerio';
+import * as fs from 'fs';
+import { Season, Course, ProfessorLink } from "../models";
+import { fetchCICSPage, getSeasonName, multisplit } from "../util";
 
+import { getProfessorLinks, insertCourses } from '../database';
 
-export async function fetchCICSSCourses(year: number, season: Season): Promise<Course[]> {
+export async function fetchCICSSCourses(year: number, season: Season, professorIds: ProfessorLink[]): Promise<Course[]> {
 
     const html = await fetchCICSPage(`https://www.cics.umass.edu/content/${getSeasonName(season)}-${year.toString().slice(-2)}-course-descriptions`, 'No connection');
     const $ = cheerio.load(html);
@@ -22,9 +24,11 @@ export async function fetchCICSSCourses(year: number, season: Season): Promise<C
 
         const instructors = headerElement.next().text().replace('Instructor(s):', '').split(',').map(e => e.trim());
         const rawdescription = headerElement.next().next().text().trim();
-        const rawPreReqs = rawdescription.split('Prerequisites:')[1] || null;
-        const description = rawdescription.split('Prerequisites:')[0].trim() || null;
+        const rawPreReqs = multisplit(rawdescription, ['Prerequisites:', 'Prerequisite:'])[1];
+        const rawCredit = rawdescription.slice(-10).match(/([0-9]+) credit/);
+        const credit = rawCredit ? parseInt(rawCredit[1]) : null;
 
+        const description = multisplit(rawdescription, ['Prerequisites:', 'Prerequisite:', '4 credits', '3 credits', '2 credits', '1 credit'])[0].trim().replace('..', '').trim();
         const prerequisites = rawPreReqs?.split('and ').map(e => e.trim().split('or ').map(e => {
             const polishedText = e.replace(/[a-z]/g, '').split('.')[0].split(',')[0].trim();
 
@@ -43,14 +47,19 @@ export async function fetchCICSSCourses(year: number, season: Season): Promise<C
 
 
 
-        }).filter(e => e)).filter(a => a.length > 0).map(e => ({ options: e })) || [];
+        }).filter((e: any) => e)).filter(a => a.length > 0).map(e => ({ options: e })) || [];
 
         const course: Course = {
-            professors: instructors,
+            professors: instructors.map(e => professorIds.find(p => {
+                const n1 = p.name.last.toLowerCase();
+                const n2 = e.split(' ')[1].toLowerCase().trim();
+
+                return n1 === n2;
+            })?.key ?? e.replace(' ', '-').toLowerCase()).filter(e => e),
             name: title,
-            id: `${subject} ${number}`,
+            key: `${subject} ${number}`,
             subject: subject,
-            credits: 0,
+            credits: credit,
             description: description,
             prerequisites: prerequisites,
             number: number,

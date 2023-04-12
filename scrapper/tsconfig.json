@@ -6,8 +6,9 @@
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "dist",
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "*": [
@@ -17,6 +18,7 @@
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "tests"
   ]
 }
