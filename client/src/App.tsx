@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Schedule from "./components/Schedule/Schedule";
 import Login from "./components/Login/Login";
+import Generate from "./components/Generate/Generate";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/track" element={<Flow />} />
+        <Route path="/generate" element={<Generate />} />
         <Route path="/login" element={<Login />} />
 
       </Routes>
