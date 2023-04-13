@@ -1,0 +1,311 @@
+@import ../../styles/helpers
+
+.card
+    display: flex
+    width: 300px
+    flex-direction: column
+    &:hover
+        .control
+            visibility: visible
+            opacity: 1
+
+.preview
+    &:hover
+        .control
+            visibility: visible
+            opacity: 1
+    
+.control
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: $neutrals3
+    visibility: hidden
+    border-radius: 16px
+    opacity: 0
+    transition: all .2s
+    +dark
+        background: $neutrals8
+
+.control2
+    position: absolute
+    top: 11px
+    left: 8px
+   
+.category
+    position: absolute
+    top: 11px
+    left: 8px
+
+.favorite
+    position: absolute
+    top: 8px
+    right: 8px
+    width: 32px
+    height: 32px
+    background: $neutrals8
+    box-shadow: 0px 8px 16px rgba(15, 15, 15, 0.2)
+    border-radius: 50%
+    svg
+        width: 20px
+        height: 20px
+        fill: $neutrals4
+        transition: fill .2s
+        transition: opacity .2s 
+    &:before
+        content: ""
+        position: absolute
+        top: 51%
+        left: 50%
+        transform: translate(-50%,-50%)
+        width: 18px
+        height: 18px
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='18' fill='none' viewBox='0 0 22 18'%3E%3Cpath d='M11 1.81A6.48 6.48 0 0 0 6.5 0 6.5 6.5 0 0 0 0 6.5c0 6.368 6.97 9.885 9.814 11.055.766.315 1.607.315 2.372 0C15.03 16.385 22 12.868 22 6.5A6.5 6.5 0 0 0 15.5 0 6.48 6.48 0 0 0 11 1.81z' fill='%23ef466f'/%3E%3C/svg%3E") no-repeat 50% 50% / 100% auto 
+        opacity: 0
+        transition: opacity .2s  
+    &:hover
+        svg
+            fill: $neutrals2
+    &.active
+        svg
+            opacity: 0
+        &:before
+            opacity: 1
+    +dark
+        background: $neutrals2
+        &:hover
+            svg
+                fill: $neutrals8
+
+.button
+    position: absolute
+    left: 50%
+    bottom: 16px
+    transform: translateX(-50%)
+
+.link
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    padding: 20px 0
+    color: $neutrals2
+    +dark
+        color: $neutrals8
+
+.body
+    margin-top: 12px
+    flex-direction: row
+    flex-grow: 1
+    height: 180px
+    width: 1000px
+    background-color:  #ffffff
+    border-radius: 15px
+    border-width: 4px
+    //border-bottom: 20px solid $neutrals6
+    & > img
+        border-radius: 12px
+        margin-top: 12px
+        height: 163px
+
+.line
+    flex-direction: column
+    align-items: flex-start
+    height: 70%
+.title
+    margin-top: 8px
+    width:70%
+    height: 30px
+    margin-right: auto
+    margin-left: 16px
+    padding-top: 1px
+    font-size: 26px
+    +dm-sans
+    color: cn("status-purple")
+.details
+    margin-top: 12px
+    margin-right: auto
+    margin-left: 16px
+    padding-top: 1px
+    font-size: 15px
+    width: 90%
+    height: 65%
+    color: $neutrals1
+    overflow-y: scroll
+    word-break: break-word
+    
+    &::-webkit-scrollbar-track 
+        border: none
+        padding: 2px 0
+        background-color: none
+    &::-webkit-scrollbar 
+        width: 5px
+    &::-webkit-scrollbar-thumb 
+        border-radius: 10px
+        box-shadow: inset 0 0 6px rgba(0,0,0,.3)
+        background-color: $neutrals8
+        border: none
+
+    
+
+.update
+    margin-right: auto
+    padding-top: 9px
+    font-size: 11px
+    color: $green
+.author
+    margin-top: auto
+    margin-right: 5px
+    font-size: 15px
+    margin-bottom: 10px
+    color: $neutrals1
+
+.credit
+    font-size: 15px
+    margin-bottom: 10px
+    margin-right: 20px
+    color: $neutrals1
+
+    
+.updatedAt 
+    margin-right: auto
+    padding-right: 3px
+    font-size: 13px
+    margin-left: 5px
+    color: $neutrals4
+
+.users
+    display: flex
+    margin-right: auto
+
+.avatar
+    
+    margin-bottom: 6px
+    padding-right: 0
+    flex-shrink: 0
+    width: 32px
+    height: 32px
+    border-radius: 50%
+    border: 2px solid $neutrals8
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+        border-radius: 50%
+    &:not(:first-child)
+        
+        margin-left: -8px
+
+.avatarBox
+    display: flex
+    margin-right: 10px
+    margin-top:30px
+    
+.counter
+    +dark
+        color: $neutrals6
+    
+.foot
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-top: 12px
+    +caption-2
+    color: $neutrals4
+    +dark
+        border-color: $neutrals3
+
+.line2
+    display: left
+    margin-left: -5px
+
+
+.status
+    svg
+        margin: -2px 4px 0 0
+        fill: $neutrals4
+    span
+        font-weight: 600
+        color: $neutrals3
+        +dark
+            color: $neutrals8
+
+.button
+    white-space: nowrap
+
+.tags
+    margin-left: 12px
+    padding-bottom: 24px
+
+
+.tag
+    +dm-sans
+    margin-top: auto
+    font-size: 12px
+    line-height: 20px
+    border-radius: 10px
+    &:not(:last-child)
+        margin-right: 4px
+.limitSize 
+    margin-right: auto
+    padding-right: 3px
+    font-size: 13px
+    margin-left: 5px
+.upper
+    height: 35%
+    display: flex
+    overflow: hidden
+    white-space: nowrap
+.copy
+    margin-left: auto
+    margin-right: 5px
+    svg
+        display: flex
+        fill: #990099
+        transition: fill .2s
+        margin-top:-5px
+    &:hover
+        svg
+            fill: darken(#FF0000, 10)
+.number
+    +dm-sans
+    margin-top: -5px
+    font-size: 25px
+    line-height: 50px
+    &:not(:last-child)
+        margin-right: 8px
+    color: #ff1a75
+.price
+    +dm-sans
+    margin-right: 12px
+    //margin-top: 12px
+    font-size: 20px
+    display: flex
+    line-height: 30px
+    &:not(:last-child)
+        margin-right: 8px
+.authorBox
+    margin-top: 10px
+    margin-right: 12px
+    margin-left: auto
+    display: flex
+    height: 70px
+.tags
+    +dm-sans
+    display: flex
+    color:#ffffff
+    font-size: 14px
+    line-height: 25px
+    border-radius: 10px
+    width:33.3%
+    text-align: center
+    margin: 0 auto
+    &:not(:last-child)
+        margin-right: 5px  
+.categoryBox
+    display: flex
+    margin-top:10px
+    margin-left: 12px
+    align-items: flex-start
+    
