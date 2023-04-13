@@ -55,7 +55,7 @@ function Generate() {
             <LabelSelect name="Track" options={options} isMulti={false}></LabelSelect>
             <LabelSelect name="Classes Taken" options={options} isMulti={true}></LabelSelect>
 
-            <button id="create-generation-button">Generate Schedules</button>
+            <button className = "button" id="create-generation-button">Generate Schedules</button>
 
         </div>
     );
