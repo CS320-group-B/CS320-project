@@ -9,7 +9,10 @@ function Schedule() {
     const tableSize = 1000
     let last = 510
 
-
+    let setLast = () => {
+        last = 510
+        return ""
+    }
 
     return (
         <div id="schedule-container" className="pt-8">
@@ -28,7 +31,7 @@ function Schedule() {
                             </div>
                         )
                     })}
-
+                    {setLast()}
                 </ul>
             </ul>
             <ul className="date">
@@ -37,7 +40,7 @@ function Schedule() {
                     {tuesdayData.map((course) => {
                         const durationHeight = (course.class_end - course.class_start) / 615 * tableSize
                         const diffCourseMargin = (course.class_start - last) / 615 * tableSize
-                        last = 510;
+                        last = course.class_end
                         return (
                             <div className="course" style={{ height: durationHeight + 'px', marginTop: diffCourseMargin + 'px' }}>
                                 <div className="course-name">{course.course_name}</div>
@@ -46,7 +49,7 @@ function Schedule() {
                             </div>
                         )
                     })}
-
+                    {setLast()}
                 </ul>
             </ul>
             <ul className="date">
@@ -55,7 +58,7 @@ function Schedule() {
                     {wednesdayData.map((course) => {
                         const durationHeight = (course.class_end - course.class_start) / 615 * tableSize;
                         const diffCourseMargin = (course.class_start - last) / 615 * tableSize;
-                        last = 510;
+                        last = course.class_end
                         return (
                             <div className="course" style={{ height: durationHeight + 'px', marginTop: diffCourseMargin.toString() + 'px' }}>
                                 <div className="course-name">{course.course_name}</div>
@@ -64,7 +67,7 @@ function Schedule() {
                             </div>
                         )
                     })}
-
+                    {setLast()}
                 </ul>
             </ul>
             <ul className="date">
@@ -82,7 +85,7 @@ function Schedule() {
                             </div>
                         )
                     })}
-
+                    {setLast()}
                 </ul>
             </ul>
             <ul className="date">
@@ -91,7 +94,7 @@ function Schedule() {
                     {fridayData.map((course) => {
                         const durationHeight = (course.class_end - course.class_start) / 615 * tableSize;
                         const diffCourseMargin = (course.class_start - last) / 615 * tableSize;
-                        last = 510;
+                        last = course.class_end
                         return (
                             <div className="course" style={{ height: durationHeight + 'px', marginTop: diffCourseMargin + 'px' }}>
                                 <div className="course-name">{course.course_name}</div>
@@ -100,7 +103,7 @@ function Schedule() {
                             </div>
                         )
                     })}
-
+                    {setLast()}
                 </ul>
             </ul>
         </div>
