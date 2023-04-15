@@ -15,7 +15,7 @@ function Schedule() {
     }
 
     return (
-        <div id="schedule-container" className="pt-8">
+        <div id="schedule-container" className="py-8">
             <ul className="date">
                 <div className="title">Monday</div>
                 <ul className="course-list" style={{ height: tableSize + 'px' }}>

@@ -5,14 +5,11 @@ function Navbar() {
   const routes = [{ name: 'Home', path: '/' }, { name: 'My Schedules', path: '/Schedule' }, { name: 'Profile', path: '/Profile' }, { name: 'Track', path: '/Track' }, { name: 'Login', path: '/Login' },{ name: 'Signup', path: '/Signup' }];
   return (
     <div>
-      <ul id="nav" className="py-4 shadow-md flex px-6">
+      <ul id="nav" className="py-4 shadow-md flex px-6 border-b-1 border-black">
         {routes.map((item) => {
           const active = location.pathname === item.path ? 'bg-black text-white rounded-lg' : ''
           return <li className={"px-4 py-2 " + active}><a href={item.path}>{item.name}</a></li>
         })}
-
-
-
       </ul>
     </div>
   );
