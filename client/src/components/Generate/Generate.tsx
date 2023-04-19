@@ -31,7 +31,7 @@ function Generate() {
   const currYear = new Date().getFullYear();
 
   const seasons = ["Fall", "Winter", "Spring", "Summer"];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     for (let season = 0; season < 4; season++) {
       semesters.push({
         label: seasons[season]+ " " +(currYear - i),
@@ -43,6 +43,20 @@ function Generate() {
     {
       label: "Computer Science",
       value: "placeholder",
+    },
+    {
+      label: "Computer Engineering",
+      value: "placeholder",
+    },
+    {
+      label: "Informatics",
+      value: "placeholder",
+    },
+  ]
+  const classesTaken: Option[] = [
+    {
+      label: "CS 220",
+      value: "Programming Methodology",
     },
   ]
 
@@ -75,7 +89,7 @@ function Generate() {
       <LabelSelect name="Major" options={majors} isMulti={false}></LabelSelect>
       <LabelSelect name="Additional Major(s)" options={options} isMulti={true}></LabelSelect>
       <LabelSelect name="Track" options={options} isMulti={false}></LabelSelect>
-      <LabelSelect name="Classes Taken" options={options} isMulti={true}></LabelSelect>
+      <LabelSelect name="Classes Taken" options={classesTaken} isMulti={true}></LabelSelect>
 
       <button className="button" id="create-generation-button">Generate Schedules</button>
 

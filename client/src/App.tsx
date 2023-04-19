@@ -6,7 +6,7 @@ import Profile from "./components/Profile/Profile";
 import Schedule from "./components/Schedule/Schedule";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
-
+import Generate from "./components/Generate/Generate";
 
 export default function App() {
 
@@ -21,6 +21,7 @@ export default function App() {
         <Route path="/track" element={<Flow />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/generate" element={<Generate />}/>
 
       </Routes>
 
