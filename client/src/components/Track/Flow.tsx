@@ -161,10 +161,9 @@ const BasicFlow = () => {
             onNodeClick={onClick}
 
 
-
         >
 
-            <div className="collapse md:visible  bg-white w-96 right-8 bottom-48  top-8 rounded-lg shadow-md border-gray border p-6 absolute z-50">
+            <div className="overflow-auto collapse md:visible  bg-white w-96 right-8 bottom-48  top-8 rounded-lg shadow-md border-gray border p-6 absolute z-50">
                 {professor ? <div className="text-left">
                     <h1 className="text-lg font-bold">{`${professor?.name.first} ${professor?.name.last}`}</h1>
                     <p className="text-sm pt-2">Email: {professor.email}</p>
