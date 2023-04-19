@@ -41,7 +41,7 @@ const addUser = async (req, res) => {
 // @desc    Update existing user
 const updateUser = async (req, res) => { 
     try{
-        const updatedUser = await User.findOneAndUpdate({"_id": req.params.id}, req.body, {new: true});
+        const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, req.body, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
     } catch (error){
@@ -51,7 +51,7 @@ const updateUser = async (req, res) => {
 // @desc    Delete Existing User
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findOneAndRemove({"_id": req.params.id});
+        const user = await User.findOneAndRemove({"_id": req.userId});
         
         if (!user) return res.status(204).json({ message: "User not found" });
 
