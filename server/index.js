@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 
 const courseRoutes = require('./routes/courses.js');
 const userRoutes = require('./routes/users.js');
@@ -18,7 +18,7 @@ app.use('/course', courseRoutes);
 app.use('/user', userRoutes);
 
 //const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
-const CONNECTION_URL = process.env.CONNECTION_URL1
+const CONNECTION_URL = process.env.CONNECTION_URL1;
 
 const PORT = process.env.PORT || 5000;
 
