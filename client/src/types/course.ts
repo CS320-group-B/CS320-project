@@ -1,10 +1,10 @@
-export interface TCourse {
+export interface Course {
     name: string;
-    id: string;
-    credits: number;
+    key: string;
+    credits: number | null;
     number: string;
     professors: string[];
     subject: string;
     description: string;
-    prerequisites: { options: string[] }[]; // list of class # ids
+    prerequisites: { options: string[] }[];
 }

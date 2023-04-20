@@ -1,8 +1,8 @@
-import { TUser } from "../../types/user";
+import { User } from "../../types/user";
 
 
 export interface IProfile {
-    user: TUser;
+    user: User;
 }
 
 export type TSlide = {
