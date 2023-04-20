@@ -17,7 +17,8 @@ const getUsers = async (req, res) => {
 //@desc get User
 const getUser = async(req,res) =>{
     try {
-        const user = await User.findById(req.params.id);
+        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
+        const user = await User.findById(req.userId);
         res.status(200).json(user);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -41,7 +42,8 @@ const addUser = async (req, res) => {
 // @desc    Update existing user
 const updateUser = async (req, res) => { 
     try{
-        const updatedUser = await User.findOneAndUpdate({"_id": req.params.id}, req.body, {new: true});
+        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
+        const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, req.body, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
     } catch (error){
@@ -51,10 +53,9 @@ const updateUser = async (req, res) => {
 // @desc    Delete Existing User
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findOneAndRemove({"_id": req.params.id});
-        
+        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
+        const user = await User.findOneAndRemove({"_id": req.userId});
         if (!user) return res.status(204).json({ message: "User not found" });
-
         res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -106,4 +107,4 @@ const signup = async (req, res) => {
     }
 }
 
-module.exports = {getUsers, addUser, updateUser, deleteUser, signin, signup};
+module.exports = {getUser, addUser, updateUser, deleteUser, signin, signup};
