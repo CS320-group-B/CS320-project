@@ -14,9 +14,7 @@ type Props = {
 }
 
 export const UserContextProvider = ({ children }:Props) => {
-
     const [userState, setUserState] = React.useState(0);
-
     return(
         <UserContext.Provider value={ {userState, setUserState} }>
             {children}
@@ -24,13 +22,4 @@ export const UserContextProvider = ({ children }:Props) => {
     )
 }
 
-//export const useTodoContext = () => useContext(UserContext)
-
 export default UserContext 
-
-
-
-
-
-
-
