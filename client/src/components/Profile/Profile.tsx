@@ -1,171 +1,147 @@
-import React, {useState, FC} from "react";
-import cn from "classnames";
-import { UserProfile } from "../UserProfile";
-import { IProfile } from "./types";
-import { Icon } from "../icon";
-import styles from "./Profile.module.sass";
-import { Link } from "react-router-dom";
-import { CourseCard } from "../CourseCard";
+import React, { useState, FC } from "react";
+
+import { track } from "../../constants/Track";
+import { Course } from "../../types/course";
+import { courses } from "../../constants/Course";
+import { user } from "../../constants/User";
 
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [visible, setVisible] = useState(false);
-  
-    const navLinks = [
-        "Taken Courses",
-        "Planned Courses",
-     ];
 
-    const user = {
-        id: "abc",
-        name: "CS320",
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget ligula ac metus placerat consequat ut in risus. Mauris at lobortis est. Nam pharetra a enim sit amet tincidunt. Suspendisse sagittis ornare augue, at feugiat libero porttitor at. Praesent imperdiet est at tellus pellentesque sagittis. Fusce hendrerit vitae elit vel ullamcorper. Aenean eget sodales ipsum. Fusce a turpis lobortis, tempus justo eget, convallis nunc. Etiam et elementum nisi. Aliquam hendrerit malesuada velit, et dapibus nisl. Curabitur a sollicitudin velit.",
-        email: "course_planner@gmail.com",
-        createdAt: "",
-        image: "",
-        taken_courses: "",
-        planned_courses: "",
-    }
 
-    const taken = [ {
-      name: "CS320: Introduction to Software Engineering",
-      id: "abc",
-      credits: 4,
-      number: "4",
-      professors: ["Heather Conboy"],
-      subject: "Computer Science",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. VestibulumLorem ipsum dolor sit amet, consectetur adipiscing elit. VestibulumLorem ipsum dolor sit amet, consectetur adipiscing elit. VestibulumLorem ipsum dolor sit amet, consectetur adipiscing elit. VestibulumLorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget ligula ac metus placerat consequat ut in risus. Mauris at lobortis est. Nam pharetra a enim sit amet tincidunt. Suspendisse sagittis ornare augue, at feugiat libero porttitor at. Praesent imperdiet est at tellus pellentesque sagittis. Fusce hendrerit vitae elit vel ullamcorper. Aenean eget sodales ipsum. Fusce a turpis lobortis, tempus justo eget, convallis nunc. Etiam et elementum nisi. Aliquam hendrerit malesuada velit, et dapibus nisl. Curabitur a sollicitudin velit.",
-      prerequisites: []
-    },{
-      name: "CS220: Introduction to Algorithm",
-      id: "ljlsvi",
-      credits: 4,
-      number: "4",
-      professors: ["Marius Minea", "Ghazaleh Parvini"],
-      subject: "Computer Science",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget ligula ac metus placerat consequat ut in risus. Mauris at lobortis est. Nam pharetra a enim sit amet tincidunt. Suspendisse sagittis ornare augue, at feugiat libero porttitor at. Praesent imperdiet est at tellus pellentesque sagittis. Fusce hendrerit vitae elit vel ullamcorper. Aenean eget sodales ipsum. Fusce a turpis lobortis, tempus justo eget, convallis nunc. Etiam et elementum nisi. Aliquam hendrerit malesuada velit, et dapibus nisl. Curabitur a sollicitudin velit. ",
-      prerequisites: []
-    }]
 
-    const planned = [{
-      name: "CS383: Introduction to Artificial Intelligence",
-      id: "sadagf",
-      credits: 4,
-      number: "4",
-      professors: ["Matthew Rattigan"],
-      subject: "Computer Science",
-      description: "Hello, World",
-      prerequisites: []
-    }]
+  const now = new Date();
 
-    return (
-      <div className={styles.profile}>
-        <div
-          className={cn(styles.head, { [styles.active]: visible })}
-          style={{
-            backgroundImage: "url(/image/content/bg-profile.jpg)",
-          }}
-        >
-          <div className={cn("container", styles.container)}>
-            <div className={styles.btns}>
-              <button
-                className={cn("button-stroke button-small", styles.button)}
-                onClick={() => setVisible(true)}
-              >
-                <Icon name="edit" size="16" />
-                <span> Edit cover photo</span>
-              </button>
-              <button
-                className={cn("button-stroke button-small", styles.button)}
-                // to={`/profile-edit/${user.id}`}
-              >
-                <Link to={`/Profile-edit/${user.id}`}>
-                    <Icon name="image" size="16" />
-                    <span> Edit profile</span>
-                </Link>
-              </button>
-            </div>
-            <div className={styles.file}>
-              <input type="file" />
-              <div className={styles.wrap}>
-                <Icon name="upload-file" size="48" />
-                <div className={styles.info}>Drag and drop your photo here</div>
-                <div className={styles.text}>or click to browse</div>
-              </div>
-              <button
-                className={cn("button-small", styles.button)}
-                onClick={() => setVisible(false)}
-              >
-                Save photo
-              </button>
-            </div>
-          </div>
+  const plannedCourses: Course[] = track.semesters.filter((s, i) => {
+    return (s.year === now.getFullYear() && getSeason(now) !== s.season && s.season === "Fall") || s.year > now.getFullYear();
+  }).map(s => s.classes.map(c => courses.find(k => k.key === c) || null)).flat().filter(c => c) as Course[];
+
+  const previousCourses: Course[] = track.semesters.filter((s, i) => {
+    return s.year === now.getFullYear() && getSeason(now) === s.season;
+
+  }).map(s => s.classes.map(c => courses.find(k => k.key === c) || null)).flat().filter(c => c) as Course[];
+
+  const currentCourses: Course[] = track.semesters.filter((s, i) => {
+    return (s.year === now.getFullYear() && getSeason(now) !== s.season && s.season === "Spring") || s.year < now.getFullYear();
+  }).map(s => s.classes.map(c => courses.find(k => k.key === c) || null)).flat().filter(c => c) as Course[];
+
+  return (
+
+    <div className="container grid grid-cols-4 mx-auto gap-8  p-8">
+      <div className="col-span-1 shadow-sm rounded-xl border border-gray-200 px-8 py-8 overflow-hidden">
+        <div className="flex flex-col relative ">
+          <img src={"https://www.umass.edu/sites/default/files/2023-03/UMass_Seal_Medium_PMS_202_0.png"} className="rounded-lg shadow-lg h-44 w-44 mb-6 object-cover absolute -top-16 -right-16 opacity-5 saturate-0"></img>
+
+          <img className="w-32 h-32 rounded-full object-cover" src={user.avatar} alt="Profile Picture" />
+
+          <h1 className="text-2xl font-bold mt-4">{user.name}</h1>
+          <a className="text-sm text-blue-500 underline" href={`mailto:${user.email}`}>{user.email}</a>
+          <p className="text-sm mt-4"><strong>Major: </strong> {user.major}</p>
+          <p className="text-sm"><strong>Subfield: </strong> {user.subfield}</p>
+
+          <p className="text-sm"><strong>Graduating: </strong> {user.graduation.season} {user.graduation.year}</p>
+          <p className="text-sm mt-4"><strong>Bio: </strong> {user.bio}</p>
+
         </div>
-        <div className={styles.body}>
-          <div className={cn("container", styles.container)}>
-            <UserProfile 
-              className={styles.user} 
-              user={user}
-            />
-  
-            <div className={styles.wrapper}>
-              <div className={styles.nav}>
-                {navLinks.map((x, index) => (
-                  <button
-                    className={cn(styles.link, {
-                      [styles.active]: index === activeIndex,
-                    })}
-                    key={index}
-                    onClick={() => setActiveIndex(index)}
-                  >
-                    {x}
-                  </button>
-                ))}
-              </div>
-              <div className={styles.group}>
-                <div className={styles.item}>
-                  {/* {activeIndex === 0 && (
-                    <Product className ={styles.items} item={bids.slice(0, 3)} />
-                  )}
-  
-  
-                  {activeIndex === 1 && (
-                    <IdeaCard idea = {idea1} />
-  
-                    <div>
-                      {ideas.map((idea, index) => <IdeaCard key={index} idea={idea} />)}
-                    </div>
-  
-  
-                  )} */}
-                  {activeIndex === 0 && (
-                    <div className={styles.wrapper}>       
-                      <div className={styles.list}>
-                        {taken.map((course, index) => 
-                          <CourseCard key={index} course={course} />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {activeIndex === 1 && (
-                    <div className={styles.wrapper}>       
-                      <div className={styles.list}>
-                        {planned.map((course, index) => 
-                          <CourseCard key={index} course={course} />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+      </div >
+      <div className="col-span-3 shadow-sm rounded-xl border border-gray-200 px-8 py-8">
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-between">
+            <h1 className="text-2xl font-bold">Courses</h1>
+            <div className="flex flex-row">
+              <button className="bg-black text-white px-4 py-2 rounded-lg">Add Course</button>
+
             </div>
-            {/* End_Changes */}
-  
-  
+
           </div>
+
+        </div>
+        <div className="flex flex-col">
+          {/* {
+            plannedCourses.map((course, i) => {
+              return (
+                <div className="mt-4">
+                  <h4 className="text-gray-500 font-bold">Planned</h4>
+
+                  <h1 className="text-lg font-semibold"> {course.key + " | "}{course.name} {'(' + course.credits + ' credits)'}</h1>
+
+                  <h5 className="text-md"> By: {course.professors.map(p => p.split('-').map(c => c[0].toUpperCase() + c.substring(1, c.length)).join(' ')).join(', ')}</h5>
+                  <p className="text-sm mt-1 text-gray-500"> {course.description.split('.').slice(0, 3).join('.') + "..."}</p>
+
+                </div>
+              )
+            })
+          }
+          {
+            currentCourses.map((course, i) => {
+              const course = courses.find(k => k.key === c);
+              return (
+                <div className="mt-4">
+                  <h4 className="text-blue-700 font-bold">In Progress</h4>
+
+                  <h1 className="text-lg font-semibold"> {course.key + " | "}{course.name} {'(' + course.credits + ' credits)'}</h1>
+
+                  <h5 className="text-md"> By: {course.professors.map(p => p.split('-').map(c => c[0].toUpperCase() + c.substring(1, c.length)).join(' ')).join(', ')}</h5>
+                  <p className="text-sm mt-1 text-gray-500"> {course.description.split('.').slice(0, 3).join('.') + "..."}</p>
+
+                </div>
+              )
+            })
+          } */}
+          {
+            track.semesters.map((s, i) => {
+              const status = getStatus(s);
+              return s.classes.map((c, j) => {
+                const course = courses.find(k => k.key === c);
+                if (course) {
+                  return (
+                    <div className="mt-4">
+                      <h4 className={`${status.color} font-bold`}>{status.status}</h4>
+
+                      <h1 className="text-lg font-semibold"> {course.key + " | "}{course.name} {'(' + course.credits + ' credits)'}</h1>
+
+                      <h5 className="text-md"> By: {course.professors.map(p => p.split('-').map(c => c[0].toUpperCase() + c.substring(1, c.length)).join(' ')).join(', ')}</h5>
+                      <p className="text-sm mt-1 text-gray-500"> {course.description.split('.').slice(0, 3).join('.') + "..."}</p>
+
+                    </div>
+                  );
+                }
+                return null;
+              });
+            }).flat().filter(c => c).reverse()
+          }
         </div>
       </div>
-    );
-  };
-  
-  export default Profile;
+    </div >
+
+  );
+};
+
+function getSeason(date: Date): string {
+  const month = date.getMonth();
+  if (month < 3) {
+    return "Winter";
+  } else if (month < 6) {
+    return "Spring";
+  } else if (month < 9) {
+    return "Summer";
+  } else {
+    return "Fall";
+  }
+
+}
+
+function getStatus(s: any): { status: string, color: string } {
+  const now = new Date();
+  const planned = (s.year === now.getFullYear() && getSeason(now) !== s.season && s.season === "Fall") || s.year > now.getFullYear();
+  const inProgress = s.year === now.getFullYear() && getSeason(now) === s.season;
+
+  if (planned) {
+    return { status: "Planned", color: "text-gray-500" };
+
+  } else if (inProgress) {
+    return { status: "In Progress", color: "text-blue-500" };
+  }
+  return { status: "✓ Completed", color: "text-green-500" };
+}
+
+export default Profile;
