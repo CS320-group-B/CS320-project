@@ -84,10 +84,10 @@ const signin = async (req, res) => {
 }
 
 const signup = async (req, res) => {
-    const { email, password, confirmPassword } = req.body;        
+    const { name, email, password, confirmPassword } = req.body;        
 
     try {
-        if (!email || !password || !confirmPassword) return res.status(400).json({ message: "Please enter all fields." });
+        if (!name || !email || !password || !confirmPassword) return res.status(400).json({ message: "Please enter all fields." });
 
         const existingUser = await User.findOne({ email });
 
@@ -97,7 +97,7 @@ const signup = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const result = await User.create({ email, password: hashedPassword });
+        const result = await User.create({ name, email, password: hashedPassword });
 
         const token = jwt.sign({ email: result.email, id: result._id}, 'test', { expiresIn: "1h" });
 
