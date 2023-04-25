@@ -35,6 +35,4 @@ const updateUser = async (userData) => {
     return response.data
 }
 
-const 
-
 export default { signup, login, updateUser }
