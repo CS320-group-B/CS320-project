@@ -23,3 +23,18 @@ const login = async (userData) => {
 
     return response.data
 }
+
+const updateUser = async (userData) => {
+    // userData should have id/newUser
+    const response = await axios.put(`${devUrl}/user/${userData.id}`, userData)
+
+    if(response.data) {
+        // Do something 
+    }
+
+    return response.data
+}
+
+const 
+
+export default { signup, login, updateUser }
