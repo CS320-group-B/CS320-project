@@ -9,7 +9,7 @@ const addEnrollment = async(req,res) =>{
         await enrollment.save();
         res.status(201).json(enrollment);
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(409).json({ message: error.message });
     }
 }
 const deleteEnrollment = async (req, res) => {
@@ -35,9 +35,8 @@ const updateEnrollment = async (req, res) => { // untested
     try {
         let upd = req.body;
         if (upd.hasOwnProperty("student_id")){delete upd.student_id;}// prevents users from enrolling other users
-        if (upd.hasOwnProperty("course_key")){delete upd.course_key;}// prevents users from making nonsense enrollments
 
-        const updatedEnrollment = await Enrollment.findOneAndUpdate({"student_id": req.userId, "course_key": req.course_key}, req.body , {new: true});
+        const updatedEnrollment = await Enrollment.findOneAndUpdate({"student_id": req.userId, "course_key": upd.course_key}, upd , {new: true});
         if (!updatedEnrollment){return res.status(404).json("Enrollment not found");}
         res.status(200).json(updatedEnrollment);
     } catch (error) {
