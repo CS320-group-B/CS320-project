@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 
 const courseRoutes = require('./routes/courses.js');
 const userRoutes = require('./routes/users.js');
+const professorRoutes = require('./routes/professors.js');
+const sectionRoutes = require('./routes/sections.js');
 
 const app = express();
 dotenv.config();
@@ -16,6 +18,8 @@ app.use(cors());
 
 app.use('/course', courseRoutes);
 app.use('/user', userRoutes);
+app.use('/professor', professorRoutes);
+app.use('/section', sectionRoutes);
 
 //const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
 const CONNECTION_URL = process.env.CONNECTION_URL1;
