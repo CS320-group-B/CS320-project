@@ -1,7 +1,23 @@
 const { Graph, alg } = require('graphlib');
 const { data } = require('./data');
-
+const { Course } = require('../models/course.js');
 const courses = data.data;
+
+exports.generateSchedule = async (constraints, preferences) => {
+  const courses = await Course.find();
+  const schedule = generateSchedule(courses, constraints, preferences);
+  return schedule;
+}
+
+function generateSchedule(courses, constraints, preferences) {
+  const graph = createGraph(courses);
+  // perform topological sort on graph
+  const sorted = alg.topsort(graph);
+  // Implement scheduling algorithm
+  const schedule = [];
+  // TODO: implement scheduling algorithm
+  return schedule;
+}
 
 function createGraph(courses) {
   // Create an empty directed graph
