@@ -9,10 +9,10 @@ const courseSchema = mongoose.Schema({
     key: String,
     credits: Number,
     number: String,
-    professors: [String],
+    professors: [{"professor_key": String}],
     subject: String,
     description: String,
-    prerequisites: [prerequisitesSchema]
+    prerequisites: [{"prerequisite_key": String}]
 });
 
 const Course = mongoose.model('Course', courseSchema)

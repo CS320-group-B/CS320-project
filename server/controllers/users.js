@@ -2,7 +2,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user.js');
+const Enrollment = require('../models/enrollment.js');
 
+
+
+const getUser = async(req,res) =>{
+    try {
+        const user = await User.findById(req.userId);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+    
+}
 //@desc get all users
 const getUsers = async (req, res) => {
     try {
@@ -12,18 +24,6 @@ const getUsers = async (req, res) => {
         res.status(404).json({message: error.message}); 
     }
 
-}
-
-//@desc get User
-const getUser = async(req,res) =>{
-    try {
-        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
-        const user = await User.findById(req.userId);
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-    
 }
 
 //@desc add a user
@@ -42,7 +42,6 @@ const addUser = async (req, res) => {
 // @desc    Update existing user
 const updateUser = async (req, res) => { 
     try{
-        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
         const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, req.body, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
@@ -106,5 +105,30 @@ const signup = async (req, res) => {
         res.status(500).json({ message: error.message});
     }
 }
+const addTaken = async (req, res) => { 
+    try{
+        let updatedUser;
+        if (req.body.hasOwnProperty("taken")){
+            updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$addToSet: {"taken": {"course_key":req.body.course_key}}}, {new: true});
+        }
+        if (!updatedUser){return res.status(404).json("User not found");}
+        res.status(200).json(updatedUser);
+    } catch (error){
+        res.status(404).json({ message: error.message})
+    }
+};
+// @desc remove a course from either taken array in a User
+const removeTaken = async (req, res) => { 
+    try{
+        let updatedUser;
+        if (req.body.hasOwnProperty("taken")){
+            updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$pull: {"taken": {"course_key": req.body.course_key}}}, {new: true});
+        }
+        if (!updatedUser){return res.status(404).json("User not found");}
+        res.status(200).json(updatedUser);
+    } catch (error){
+        res.status(404).json({ message: error.message})
+    }
+};
 
-module.exports = {getUser, addUser, updateUser, deleteUser, signin, signup};
+module.exports = {getUser, addUser, updateUser, deleteUser, signin, signup, addTaken, removeTaken};
