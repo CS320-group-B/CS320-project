@@ -1,3 +1,4 @@
+// import {useState, useEffect} from "React";
 import Flow from "./components/Track/Flow";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
@@ -7,9 +8,17 @@ import Schedule from "./components/Schedule/Schedule";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 
+import { SessionContext, getSessionCookie, setSessionCookie } from './context/session'
+
 
 export default function App() {
-
+  // const [session, setSession] = useState(getSessionCookie());
+  // useEffect(
+  //   () => {
+  //     setSession(getSessionCookie());
+  //   },
+  //   [session]
+  // );
 
   return (
     <BrowserRouter>

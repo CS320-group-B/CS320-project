@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-// import { useSelector, useDispatch} from "react-redux";
-// import { loginUser } from "../../actions/authActions";
-import * as yup from 'yup';
 import {
   TextField,
   Container,
@@ -15,45 +10,89 @@ import {
   Grid,
   Link
 } from "@mui/material";
+import axios from 'axios';
+import { createBrowserHistory } from "history";
+import { SessionContext, getSessionCookie, setSessionCookie } from "../../context/session";
 
-const ValidationSchema = yup.object({
-  email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password's length must be greater than 8")
-    .required("Password is required"),
-});
 
+// const ValidationSchema = yup.object({
+//   email: yup.string().email("Invalid email").required("Email is required"),
+//   password: yup
+//     .string()
+//     .min(8, "Password's length must be greater than 8")
+//     .required("Password is required"),
+// });
+
+// interface FormValues {
+//   email: string;
+//   password: string;
+// }
+
+const history = createBrowserHistory();
 
 const Login = () => {
-//   const [isError, setIsError] = useState(false); 
+//   const formik = useFormik({
+//     validationSchema: ValidationSchema,
+//     initialValues: {
+//       email: "",
+//       password: "",
+//     },
+//     onSubmit: (values : FormValues) => {
+      
+//       const configuration = {
+//         method: "post",
+//         url: "http://localhost:5000/user/signup",
+//         data: {
+//           email: values.email,
+//           password: values.password
+//         }
+//       };
 
-//   const state = useSelector((state) => ({
-//     auth: state.auth,
-//     errors: state.errors,
-//   }));
+//       axios(configuration)
+//       .then((result) => {
+//         console.log(result);
+//       })
+//       .catch((error) => {
+//         error = new Error();
+//       });
+//     },
+//   });
 
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-  // if account is already set
-//   if (state.auth.isAuthenticated) {
-//     dispatch(getTransactions(state.auth.user.id));
-//     history.push("/transaction");
-//   }
+    const configuration = {
+      method: "post",
+      url: "http://localhost:5000/user/signin",
+      data: {
+        email,
+        password
+      }
+    };
 
-  const formik = useFormik({
-    validationSchema: ValidationSchema,
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit: (values : any) => {
-    //   dispatch(loginUser(values, history));
-    //   setIsError(true);
-    },
-  });
+    axios(configuration)
+    .then((result) => {
+      alert("login successfully")
+      //Add thing do when signin successfully here
+      // setSessionCookie({ email });
+      console.log(result)
+      history.push("/");
 
+    })
+    .catch((error) => {
+      alert("login fail")
+      window.location.reload();
+      error = new Error();
+    });
+
+    setLoading(false);
+  }
+  
   return (
     <Container maxWidth={false} className="formContainer">
       <Box
@@ -65,7 +104,7 @@ const Login = () => {
           }}
         >
         <Typography variant="h4" className="title">Welcome to Course Scheduler!</Typography>
-        <Box component="form"  noValidate sx={{ mt: 1 }}>
+        <Box component="form"  noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -76,10 +115,12 @@ const Login = () => {
               autoComplete="email"
               autoFocus
               type="text"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              error={Boolean(formik.errors.email)}
-              helperText={formik.errors.email}
+              value = {email}
+              onChange = {e => setEmail(e.target.value)}
+              // value={formik.values.email}
+              // onChange={formik.handleChange}
+              // error={Boolean(formik.errors.email)}
+              // helperText={formik.errors.email}
             />
             <TextField
               margin="normal"
@@ -90,10 +131,12 @@ const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              error={Boolean(formik.errors.password)}
-              helperText={formik.errors.password}
+              value = {password}
+              onChange = {e => setPassword(e.target.value)}
+              // value={formik.values.password}
+              // onChange={formik.handleChange}
+              // error={Boolean(formik.errors.password)}
+              // helperText={formik.errors.password}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -117,7 +160,6 @@ const Login = () => {
           </Box>
         </Box>
     </Container>
- 
   );
 };
 
