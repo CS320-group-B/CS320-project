@@ -1,5 +1,5 @@
 import React from 'react'
-import { createContext, useContext, useState, PropsWithChildren} from "react";
+import { createContext, useContext, useState} from "react";
 
 
 type UserContextType = {
@@ -23,3 +23,14 @@ export const UserContextProvider = ({ children }:Props) => {
 }
 
 export default UserContext 
+
+
+
+/* 
+
+ - user
+ - enrollments
+ - useEffect 
+
+
+*/
