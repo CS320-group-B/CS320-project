@@ -29,6 +29,7 @@ const getUsers = async (req, res) => {
 //@desc add a user
 const addUser = async (req, res) => {
     const user = req.body;
+    user.taken = [];
     const newUser = new User(user);
     try{
         await newUser.save();
@@ -52,7 +53,6 @@ const updateUser = async (req, res) => {
 // @desc    Delete Existing User
 const deleteUser = async (req, res) => {
     try {
-        if (req.params.id !== req.userId){return res.status(400).json("Id does not match token");}
         const user = await User.findOneAndRemove({"_id": req.userId});
         if (!user) return res.status(204).json({ message: "User not found" });
         res.status(200).json({ message: "User deleted successfully" });
@@ -107,23 +107,17 @@ const signup = async (req, res) => {
 }
 const addTaken = async (req, res) => { 
     try{
-        let updatedUser;
-        if (req.body.hasOwnProperty("taken")){
-            updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$addToSet: {"taken": {"course_key":req.body.course_key}}}, {new: true});
-        }
+        let updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$addToSet: {"taken": req.body.course_key}}, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
     } catch (error){
         res.status(404).json({ message: error.message})
     }
 };
-// @desc remove a course from either taken array in a User
+// @desc remove a course from taken array in a User
 const removeTaken = async (req, res) => { 
     try{
-        let updatedUser;
-        if (req.body.hasOwnProperty("taken")){
-            updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$pull: {"taken": {"course_key": req.body.course_key}}}, {new: true});
-        }
+        let updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$pull: {"taken":req.body.course_key}}, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
     } catch (error){

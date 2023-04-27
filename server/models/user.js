@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
     subfield: { type: String },
     major: { type: String },
     password: { type: String, required: true },
-    taken: [{"course_key": mongoose.Schema.Types.ObjectId}]
+    taken: [String]
 });
 
 const User = mongoose.model('User', userSchema);

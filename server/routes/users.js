@@ -13,8 +13,8 @@ router.get('/', auth, getUser);
 router.post('/', auth, addUser);
 router.put('/', auth, updPassword, updateUser);
 router.put('/addTaken', auth, addTaken);
-router.put('/removeTaken', auth, removeTaken);
 
-router.delete('/:id', auth, deleteUser);
+router.delete('/removeTaken', auth, removeTaken);
+router.delete('/', auth, deleteUser);
 
 module.exports = router;
