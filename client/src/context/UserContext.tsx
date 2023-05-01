@@ -26,11 +26,3 @@ export default UserContext
 
 
 
-/* 
-
- - user
- - enrollments
- - useEffect 
-
-
-*/
