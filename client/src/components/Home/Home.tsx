@@ -28,9 +28,9 @@ function Home () {
             Welcome to Major Planner, an app to help you plan your course schedules
           </p>
           <div className="container flex flex-row px-16 py-16x">
-            {descriptionCard("Check your saved schedule", "/schedule", "My schedule")}
-            {descriptionCard("Adjust your profile", "/profile", "My profile")}
-            {descriptionCard("See course description and requirements", "/track", "Course list")}
+            {descriptionCard("Check your saved schedule", "/Schedule", "My schedule")}
+            {descriptionCard("Adjust your profile", "/Profile", "My profile")}
+            {descriptionCard("See course description and requirements", "/Track", "Course list")}
           </div>
 
           <div>Test {testContext?.userState}</div>

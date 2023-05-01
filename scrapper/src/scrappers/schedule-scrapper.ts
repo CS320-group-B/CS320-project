@@ -1,8 +1,9 @@
-import { Season, Course, Section, SectionType } from "./models";
-import { fetchCICSPage, getSeasonName, WEEK_DAYS, SECTION_TYPES, convertTime12to24 } from "./util";
+import { Season, Course, Section, SectionType, ProfessorLink } from "../models";
+import { fetchCICSPage, getSeasonName, WEEK_DAYS, SECTION_TYPES, convertTime12to24 } from "../util";
 import * as cheerio from 'cheerio';
+import { deleteSections, getProfessorLinks, getProfessors, insertSesctions } from "../database";
 
-export async function fetchCICSSchedule(year: number, season: Season): Promise<{
+export async function fetchCICSSchedule(year: number, season: Season, professorLinks: ProfessorLink[]): Promise<{
     courses: Course[], sections: Section[]
 }> {
 
@@ -32,7 +33,7 @@ export async function fetchCICSSchedule(year: number, season: Season): Promise<{
                 const course: Course = {
                     professors: [],
                     name: parts[0].trim(),
-                    id: fields[0],
+                    key: 'COMPSCI ' + fields[0],
                     credits: Number.parseInt(parts[1].match(/\d+/g).join('')),
                     description: '',
                     prerequisites: [],
@@ -51,23 +52,26 @@ export async function fetchCICSSchedule(year: number, season: Season): Promise<{
                     return info.includes(e);
                 })];
                 const location = fields[4];
-                const professors = fields[5].replace('/n', '').split(',').map(e => e.trim());
+                const professors = fields[5].replace('/n', '').split(',').map(e => e.toLowerCase().trim()).filter(e => e.length > 0);
                 const times = fields[3].includes('BY') || fields[3].length === 0 ? null : fields[3].split('-')
 
                 const start = times ? convertTime12to24(times[0]) : null;
                 const end = times ? convertTime12to24(times[1]) : null;
-                courses[courses.length - 1].professors = professors;
+
+                const professorIds = professors.map(p => professorLinks.find(l => l.name.last.toLowerCase().includes(p))?.key ?? p.toLowerCase());
+
+                courses[courses.length - 1].professors = [...new Set([...courses[courses.length - 1].professors, ...professorIds])];
                 const section: Section = {
                     start: start,
                     end: end,
                     year: year,
-                    id: id,
+                    key: id,
                     season: Season.fall,
-                    classId: courses[courses.length - 1].id,
+                    courseKey: courses[courses.length - 1].key,
                     type: type,
                     days: weekDays,
                     location: location,
-                    professors: professors
+                    professors: professorIds
                 };
                 sections.push(section);
             }
@@ -79,3 +83,4 @@ export async function fetchCICSSchedule(year: number, season: Season): Promise<{
     }
 
 }
+
