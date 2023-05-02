@@ -1,38 +1,84 @@
+// const axios = require('axios')
 import axios from 'axios'
+import { user } from '../constants/User';
 
-const devUrl = "http://localhost:3000"
+const devUrl = "http://localhost:5000"
 
-const signup = async (userData) => {
+export const signup = async (userData) => {
     // userData should have name/email/password/confirmPassword
-    const response = await axios.post(`${devUrl}/user/signup`, userData)
+    // function should return an object with result field holding name/email/password and a token field
 
-    if(response.data) {
-        // Do something 
+    const config = {
+        method: "post",
+        url: `${devUrl}/user/signup`,
+        data: userData
     }
+    // console.log(config)
 
-    return response.data
+    await axios(config)
+    .then(function (response) {
+        // console.log(response.data)
+        console.log(JSON.stringify(response.data));
+        // return response.data
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 }
 
-const login = async (userData) => {
+export const login = async (userData) => {
     // userData should have email/password
-    const response = await axios.post(`${devUrl}/user/signin`, userData)
-
-    if(response.data) {
-        // Do something 
+    const config = {
+        method: "post",
+        url: `${devUrl}/user/signin`,
+        data: userData
     }
+    // console.log(config)
 
-    return response.data
+    await axios(config)
+    .then(function (response) {
+        // console.log(response.data)
+        console.log(JSON.stringify(response.data));
+        // return response.data
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    return result.data
 }
 
-const updateUser = async (userData) => {
+export const updateUser = async (userData) => {
     // userData should have id/newUser
-    const response = await axios.put(`${devUrl}/user/${userData.id}`, userData)
-
-    if(response.data) {
-        // Do something 
+    const config = {
+        method: "post",
+        url: `${devUrl}/user/${userData.id}`,
+        data: userData
     }
 
-    return response.data
+    const result = await axios(config)
+    .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    return result.data
 }
 
-export default { signup, login, updateUser }
+export const getAllCourses = async (userData) => {
+    var config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `${devUrl}/course`,
+        headers: { }
+      };
+      
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
