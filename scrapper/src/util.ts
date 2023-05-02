@@ -63,3 +63,15 @@ export function multiIncludes(str: string, substrings: string[]): boolean {
     }
     return false;
 }
+
+export function multisplit(str: string, delimiters: string[]): string[] {
+    if (str) {
+        let result = [str];
+        for (const delimiter of delimiters) {
+            result = result.flatMap(s => s.split(delimiter));
+        }
+        return result;
+    }
+    return [];
+}
+
