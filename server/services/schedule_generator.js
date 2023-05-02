@@ -5,11 +5,11 @@ const courses = data.data;
 
 exports.generateSchedule = async (constraints, preferences) => {
   const courses = await Course.find();
-  const schedule = generateSchedule(courses, constraints, preferences);
+  const schedule = generateSchedule(courses);
   return schedule;
 }
 
-function generateSchedule(courses, constraints, preferences) {
+function generateSchedule(courses) {
   const graph = createGraph(courses);
   // perform topological sort on graph
   const sorted = alg.topsort(graph);
@@ -18,6 +18,7 @@ function generateSchedule(courses, constraints, preferences) {
   // TODO: implement scheduling algorithm
   return schedule;
 }
+//console.log(generateSchedule(courses));
 
 function createGraph(courses) {
   // Create an empty directed graph
@@ -101,9 +102,178 @@ function printGraph(graph) {
     console.log( v + " -> " + w + ";");
   }
 }
-// printGraph(graph);
+//printGraph(graph);
 subgraph = makeSubGraph(graph, 'COMPSCI 320');
-printGraph(subgraph);
+//printGraph(subgraph);
 
 // console.log(alg.topsort(graph));
 sortedCourses = alg.topsort(graph).map((courseKey) => graph.node(courseKey));
+
+function satisfiesCSRequirements(coursesTaken) {
+  // Define the required courses
+  const coreCourses = [
+    'COMPSCI 220',
+    'COMPSCI 230',
+    'COMPSCI 240',
+    'COMPSCI 250'
+  ];
+  const mathCourses = [
+    'MATH 131',
+    'MATH 132',
+    'MATH 235'
+  ];
+
+  const scienceCourses = [
+    ['CHEM 111', 'CHEM 121'],
+    ['CHEM 112', 'CHEM 122'],
+    ['GEOL 101'], // i have to include GEOL 103 and GEOL 131 or GEOL 105 and GEOL 131
+    ['PHYSICS 151', 'PHYSICS 181'],
+    ['PHYSICS 152', 'PHYSICS 182'] 
+  ];
+
+  const outsideElectives = [
+    'ECE 353',
+    'ECE 547',
+    'ECE 668',
+    'LINGUIST 401',
+    'MATH 411',
+    'MATH 545',
+    'MATH 551',
+    'MATH 552'
+  ];
+
+  // Count the number of required courses that have been taken
+  let num300PlusTaken = 0;
+  let num400PlusTaken = 0;
+
+  for (const course of coursesTaken) {
+    let courseSubject = course.split(" ")[0];
+    let courseNum = course.split(" ")[1];
+    if (courseSubject !== 'COMPSCI') continue;
+    if (courseNum.startsWith('3')) {
+      num300PlusTaken++;
+    } else if (courseNum.startsWith('4')) {
+      num400PlusTaken++;
+    }
+  }
+
+  let numScienceTaken = 0;
+
+  for (let i = 0; i < scienceCourses.length; i++) {
+    const scienceCourse = scienceCourses[i];
+    const hasScienceCourse = scienceCourse.some((course) => coursesTaken.includes(course));
+
+    if (hasScienceCourse) {
+      numScienceTaken++;
+    }
+  }
+  // Check if the major requirements are satisfied
+  const hasTakenCoreCourses = !coreCourses.some((course) => coursesTaken.indexOf(course) == -1);
+  const hasTakenMathCourses = !mathCourses.some((course) => coursesTaken.indexOf(course) == -1) && (coursesTaken.includes('MATH 233') || coursesTaken.includes('MATH 515'));
+  const hasTakenIE = (coursesTaken.includes('COMPSCI 320') || coursesTaken.includes('COMPSCI 326'));
+  const hasTakenUpperLevelCourses = (num300PlusTaken >= 4 || num300PlusTaken >= 3 && outsideElectives.some((course) => coursesTaken.includes(course))) && num400PlusTaken >= 3 && coursesTaken.includes('COMPSCI 311');
+  const hasTakenScienceCourses = numScienceTaken >= 2;
+
+  return hasTakenCoreCourses && hasTakenMathCourses && hasTakenIE && hasTakenUpperLevelCourses && hasTakenScienceCourses;
+}
+
+let coursesTaken1 = ['COMPSCI 220', 'COMPSCI 230', 'COMPSCI 240', 'COMPSCI 250', 'COMPSCI 311', 'COMPSCI 320', 'COMPSCI 320', 'COMPSCI 320', 'COMPSCI 420', 'COMPSCI 420', 'COMPSCI 420'];
+//console.log(satisfiesCSRequirements(coursesTaken1)); // false
+
+function scoreSchedule(schedule, preferences) {
+  let score = 0;
+  
+  // Score based on professor rating and difficulty
+  schedule.forEach(section => {
+    section.professor.forEach(prof => {
+      const professor = findProfessorByKey(prof);
+      if (professor) {
+        score += professor.rating * preferences.professorRatingWeight;
+        score -= professor.difficulty * preferences.professorDifficultyWeight;
+      }
+    });
+  });
+  
+  // Score based on course time and days
+  schedule.forEach(section => {
+    if (section.start >= preferences.startTime && section.end <= preferences.endTime) {
+      const daysMatch = section.days.some(day => preferences.courseDays.includes(day));
+      if (daysMatch) {
+        score += preferences.courseTimeWeight;
+      }
+    }
+  });
+  
+  return score;
+}
+
+function findProfessorByKey(key) {
+  return professors.find(prof => prof.key === key);
+}
+
+// Sample preferences
+const preferences = {
+  professorRatingWeight: 2,
+  professorDifficultyWeight: 1,
+  courseTimeWeight: 3,
+  startTime: "09:00",
+  endTime: "17:00",
+  courseDays: [1, 3, 5]
+};
+
+// Sample schedule
+const schedule = [
+  {
+    start: "10:00",
+    end: "11:30",
+    year: 2023,
+    key: 1,
+    season: "Fall",
+    courseKey: "COMP101",
+    type: "Lecture",
+    days: [1, 3],
+    location: "Room 101",
+    professor: ["p1"]
+  },
+  {
+    start: "14:00",
+    end: "15:30",
+    year: 2023,
+    key: 2,
+    season: "Fall",
+    courseKey: "COMP102",
+    type: "Lecture",
+    days: [2, 4],
+    location: "Room 102",
+    professor: ["p2"]
+  }
+];
+
+const professors = [
+  {
+    name: "Professor A",
+    key: "p1",
+    rating: 4.5,
+    difficulty: 3,
+    reviews: 10
+  },
+  {
+    name: "Professor B",
+    key: "p2",
+    rating: 3.5,
+    difficulty: 4,
+    reviews: 5
+  }
+];
+
+const score = scoreSchedule(schedule, preferences);
+console.log(score); // outputs 12
+
+function creditsTaken(coursesTaken) {
+  let credits = 0;
+  for (const courseKey of coursesTaken) {
+    const course = courses.find(course => course.key === courseKey);
+    credits += course.credits;
+  }
+  return credits;
+}
