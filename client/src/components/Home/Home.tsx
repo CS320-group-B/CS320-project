@@ -22,6 +22,8 @@ const descriptionCard = function(description: string, link: string, linkName: st
 function Home () {
   const testContext = useContext(UserContext);
 
+  testContext.setUserData({user: "Hello, World", track: "hi"})
+
     return (
         <header className="App-header h-screen bg-[#004a73]">
           <p className="text-3xl text-center text-white pt-[10%] mb-16">
@@ -33,7 +35,7 @@ function Home () {
             {descriptionCard("See course description and requirements", "/Track", "Course list")}
           </div>
 
-          <div>Test {testContext?.userState}</div>
+          <div>test {testContext?.userData?.user}</div>
         </header>
     );
 }
