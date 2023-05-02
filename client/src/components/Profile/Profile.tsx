@@ -40,10 +40,11 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                 position="right center">
                 <form onSubmit={onProfileFormSubmit}>
                   <fieldset>
-                    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden ">
-                      <div className="w-full p-6 m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring-2 ring-indigo-600 lg:max-w-xl">
-                        <h1 className="text-3xl font-semibold text-center text-indigo-700 underline uppercase decoration-wavy">
-                          Contact Form
+                    <div className="relative left-0 top-32 h-64 flex flex-col justify-center min-h-screen overflow-hidden ">
+                      //
+                      <div className="w-full  p-6 m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring-2 ring-indigo-600 lg:max-w-xl">
+                        <h1 className="text-3xl font-semibold text-center text-indigo-700 underline uppercase ">
+                          Edit Profile Form
                         </h1>
                         <form className="mt-6">
                           <div className="mb-2">
@@ -152,7 +153,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
             focus:ring-indigo-200
             focus:ring-opacity-50
           "
-                                
+
                               ></textarea>
                             </label>
                           </div>
@@ -175,12 +176,13 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               Update Profile
                             </button>
                           </div>
-                          <div></div>
+                          
                         </form>
                       </div>
                     </div>
+                    
                   </fieldset>
-                  <button type="submit">Submit</button>
+                  
                 </form>
               </Popup>
 
