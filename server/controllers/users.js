@@ -5,7 +5,7 @@ const User = require('../models/user.js');
 const Enrollment = require('../models/enrollment.js');
 
 
-
+// @desc get user by authentication token
 const getUser = async(req,res) =>{
     try {
         const user = await User.findById(req.userId);
@@ -15,7 +15,7 @@ const getUser = async(req,res) =>{
     }
     
 }
-//@desc get all users
+//@desc get all users, unsafe and only for testing
 const getUsers = async (req, res) => {
     try {
         const users = await User.find();
@@ -60,7 +60,7 @@ const deleteUser = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 };
-
+// @desc signin user with email and password
 const signin = async (req, res) => {
     const { email, password } = req.body;
 
@@ -73,7 +73,7 @@ const signin = async (req, res) => {
 
         if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials." });
 
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id}, 'test', { expiresIn: "1h" });
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id}, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         res.status(200).json({ result: existingUser, token });
     } catch (error) {
@@ -81,7 +81,7 @@ const signin = async (req, res) => {
     }
 
 }
-
+// @desc signup user with name, email, and password
 const signup = async (req, res) => {
     const { name, email, password, confirmPassword } = req.body;        
 
@@ -94,17 +94,18 @@ const signup = async (req, res) => {
 
         if (password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match." });
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
 
         const result = await User.create({ name, email, password: hashedPassword });
 
-        const token = jwt.sign({ email: result.email, id: result._id}, 'test', { expiresIn: "1h" });
+        const token = jwt.sign({ email: result.email, id: result._id}, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         res.status(201).json({ result, token });
     } catch (error) {
         res.status(500).json({ message: error.message});
     }
 }
+// @desc add a course from taken array in a User
 const addTaken = async (req, res) => { 
     try{
         let updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$addToSet: {"taken": req.body.course_key}}, {new: true});
@@ -124,5 +125,14 @@ const removeTaken = async (req, res) => {
         res.status(404).json({ message: error.message})
     }
 };
-
-module.exports = {getUser, addUser, updateUser, deleteUser, signin, signup, addTaken, removeTaken};
+// @desc rget taken courses for a user
+const getTaken = async(req,res) =>{
+    try {
+        const user = await User.findById(req.userId);
+        res.status(200).json(user.taken);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+    
+}
+module.exports = {getUser, addUser, updateUser, deleteUser, signin, signup, addTaken, removeTaken, getTaken};

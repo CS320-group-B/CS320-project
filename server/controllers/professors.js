@@ -11,7 +11,7 @@ const getProfessors = async (req, res) => {
 };
 const getProf = async (req, res) => {
     try {
-        const prof = await Professor.findById(req.params.id);
+        const prof = await Professor.findOne({"key":req.params.id});
         res.status(200).json(prof);
     } catch (error) {
         res.status(404).json({ message: error.message });

@@ -1,0 +1,6 @@
+{
+   "scripts": {
+      "start":"npm run server",
+      "server":"cd server && npm install && npm start && cd .."
+    }
+  }
