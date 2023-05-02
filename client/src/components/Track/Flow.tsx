@@ -99,7 +99,7 @@ const BasicFlow = () => {
                     targetPosition: Position.Left,
                     data: { label: c },
                     zIndex: 10,
-                    style: { width: 200 - 2 * cardPadding.x, borderRadius: 8, height: cardHeight, border: selected ? "1px solid rgb(65,105,225)" : "" },
+                    style: { width: 200 - 2 * cardPadding.x, borderRadius: 8, height: cardHeight, border: selected ? "1px solid rgb(65,105,225)" : "", zIndex: 1000 },
 
                     position: { x: (blockWidth + blockSpace) * i + offset.x + cardPadding.x, y: j * cardSpace + offset.y + cardPadding.y }
                 };
@@ -129,7 +129,7 @@ const BasicFlow = () => {
                 return {
                     id: `${c}-${prereqClass.key}`,
                     source: c,
-                    style: { strokeWidth: selected ? 1.2 : 1, stroke: selected ? "rgb(65,105,225)" : "" },
+                    style: { strokeWidth: selected ? 1.2 : 1, stroke: selected ? "rgb(65,105,225)" : "", zIndex: 1 },
                     selected,
                     target: prereqClass.key,
                     zIndex: 20,
@@ -140,20 +140,18 @@ const BasicFlow = () => {
 
         }).reduce((acc, val) => acc.concat(val), []);
     }).reduce((acc, val) => acc.concat(val), []);
+
+
     return (
         <ReactFlow
             nodes={initialNodes}
             edges={initialEdges}
             onNodeClick={onClick}
-
-
         >
-
             <div className="overflow-auto collapse md:visible  bg-white w-96 right-8 bottom-48  top-8 rounded-lg shadow-md border-gray border p-6 absolute z-50">
                 {professor ? <div className="text-left">
                     <img src={professor.avatar ?? ""} className="rounded-lg h-36 w-36 mb-6 object-cover"></img>
                     <img src={"https://www.umass.edu/sites/default/files/2023-03/UMass_Seal_Medium_PMS_202_0.png"} className="rounded-lg h-56 w-56 mb-6 object-cover absolute -top-8 -right-8 opacity-5 saturate-0"></img>
-
 
                     <h1 className="text-xl font-bold">{`${professor?.name.first} ${professor?.name.last}`}</h1>
 
