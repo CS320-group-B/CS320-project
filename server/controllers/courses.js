@@ -13,7 +13,7 @@ const getCourses = async (req, res) => {
 // @ Get a course with a course key
 const getCourse = async (req, res) => {
     try {
-        const course = await Course.fineOne({"key":req.params.id});
+        const course = await Course.findOne({"key":req.params.id});
         res.status(200).json(course);
     } catch (error) {
         res.status(404).json({ message: error.message });
