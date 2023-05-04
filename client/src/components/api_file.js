@@ -4,6 +4,8 @@ import { user } from '../constants/User';
 
 const devUrl = "http://localhost:5000"
 
+// The below functions return a Promise object, so do use async/await in wherever you are using the imported functions
+
 export const signup = async (userData) => {
     // userData should have name/email/password/confirmPassword
     // function should return an object with result field holding name/email/password and a token field
@@ -13,17 +15,15 @@ export const signup = async (userData) => {
         url: `${devUrl}/user/signup`,
         data: userData
     }
-    // console.log(config)
-
+    var result;
     await axios(config)
     .then(function (response) {
-        // console.log(response.data)
-        console.log(JSON.stringify(response.data));
-        // return response.data
+        result = response.data
     })
     .catch(function (error) {
-        console.log(error);
+        result = error;
     });
+    return result;
 }
 
 export const login = async (userData) => {
@@ -33,18 +33,15 @@ export const login = async (userData) => {
         url: `${devUrl}/user/signin`,
         data: userData
     }
-    // console.log(config)
-
+    var result;
     await axios(config)
     .then(function (response) {
-        // console.log(response.data)
-        console.log(JSON.stringify(response.data));
-        // return response.data
+        result = response.data
     })
     .catch(function (error) {
-        console.log(error);
+        result = error;
     });
-    return result.data
+    return result;
 }
 
 export const updateUser = async (userData) => {
@@ -55,15 +52,15 @@ export const updateUser = async (userData) => {
         data: userData
     }
 
-    const result = await axios(config)
+    var result;
+    await axios(config)
     .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    return result.data
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
 }
 
 export const getAllCourses = async (userData) => {
@@ -74,11 +71,13 @@ export const getAllCourses = async (userData) => {
         headers: { }
       };
       
-      axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
 }
