@@ -10,14 +10,25 @@ import {
     Link
   } from "@mui/material";
 
+  import { signup } from '../api_file'
+
 const Signup = () => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        // const userData = {
+        //   name: data.get('firstName'),
+        //   email: data.get('email'),
+        //   password: data.get('password'),
+        //   confirmPassword: data.get('password')
+        //   }
         console.log({
         email: data.get('email'),
         password: data.get('password'),
         });
+        // const result = await signup(userData)
+        // console.log(result)
     };
 
     return (
