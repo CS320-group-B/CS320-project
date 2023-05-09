@@ -1,4 +1,6 @@
 import "./Home.css";
+import { useState, useEffect } from "react";
+import Axios from 'axios';
 
 const descriptionCard = function(description: string, link: string, linkName: string) {
   return (
@@ -18,6 +20,14 @@ const descriptionCard = function(description: string, link: string, linkName: st
 }
 
 function Home () {
+    const [listOfCourses, setListOfCourses] = useState([]);
+
+    useEffect(() => {
+      Axios.get("http://localhost:3001/getCourses").then((response) => {
+        setListOfCourses(response.data);
+      });
+    }, []);
+
     return (
         <header className="App-header h-screen bg-[#004a73]">
           <p className="text-3xl text-center text-white pt-[10%] mb-16">
@@ -27,6 +37,15 @@ function Home () {
             {descriptionCard("Check your saved schedule", "/Schedule", "My schedule")}
             {descriptionCard("Adjust your profile", "/Profile", "My profile")}
             {descriptionCard("See course description and requirements", "/Track", "Course list")}
+          </div>
+          <div>
+            {listOfCourses.map((course)=> {
+              return(
+                <div>
+                  <h1>Name: {course.name}</h1>
+                </div>
+              )
+            })}
           </div>
         </header>
     );
