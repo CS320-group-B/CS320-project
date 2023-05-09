@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   TextField,
   Container,
@@ -11,8 +11,8 @@ import {
   Link
 } from "@mui/material";
 import axios from 'axios';
-import { createBrowserHistory } from "history";
-import { SessionContext, getSessionCookie, setSessionCookie } from "../../context/session";
+// import useLocalStorage from "use-local-storage";
+import {UserContext} from "../../context/UserContext"
 
 
 // const ValidationSchema = yup.object({
@@ -27,8 +27,6 @@ import { SessionContext, getSessionCookie, setSessionCookie } from "../../contex
 //   email: string;
 //   password: string;
 // }
-
-const history = createBrowserHistory();
 
 const Login = () => {
 //   const formik = useFormik({
@@ -58,10 +56,14 @@ const Login = () => {
 //     },
 //   });
 
+  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
+  // const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: []});
+  // const { userData, setUserData } = useContext(UserContext);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -78,17 +80,36 @@ const Login = () => {
     axios(configuration)
     .then((result) => {
       alert("login successfully")
-      //Add thing do when signin successfully here
-      // setSessionCookie({ email });
-      console.log(result)
-      history.push("/");
+      //Create user
+      const userdata = {
+        id: result.data.result._id,
+        name: "",
+        bio: "",
+        email: result.data.result.email,
+        createdAt: "",
+        avatar: "",
+        graduation: {
+            year: 2025,
+            season: "",
+        },
+        subfield: "",
+        major: "",
+        planned_courses: result.data.result.planned,
+        taken_courses: result.data.result.taken,
+        token: result.data.token
+      }
+
+      // setUserData({user: userdata, track: "" }); 
+      // console.log(userData);
+      sessionStorage.setItem("user", JSON.stringify(userdata));
+      // setUser(user);
 
     })
-    .catch((error) => {
-      alert("login fail")
-      window.location.reload();
-      error = new Error();
-    });
+    // .catch((error) => {
+    //   alert("login fail")
+    //   window.location.reload();
+    //   error = new Error();
+    // });
 
     setLoading(false);
   }

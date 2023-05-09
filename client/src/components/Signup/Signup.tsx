@@ -12,8 +12,11 @@ import {
 
 import {useState,useEffect} from 'react';
 import axios from "axios";
+import useLocalStorage from "use-local-storage";
+
 
 const Signup = () => {
+    const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: [], token: ""});
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -78,11 +81,18 @@ const Signup = () => {
         axios(configuration)
         .then((result) => {
           setRegister(true);
-          //Add thing do when signup successfully here
-
-          
+          const user = {
+            _id: result.data.result._id,
+            email: result.data.result.email,
+            planned: result.data.result.planned,
+            taken: result.data.result.taken,
+            token: result.data.token
+          }
+    
+          setUser(user);
         })
         .catch((error) => {
+          alert("login fail")
           error = new Error();
         });
       }
