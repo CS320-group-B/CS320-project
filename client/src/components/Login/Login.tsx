@@ -10,9 +10,15 @@ import {
   Grid,
   Link
 } from "@mui/material";
-import axios from 'axios';
-import { createBrowserHistory } from "history";
-import { SessionContext, getSessionCookie, setSessionCookie } from "../../context/session";
+import { login } from "../api_file";
+
+const ValidationSchema = yup.object({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password's length must be greater than 8")
+    .required("Password is required"),
+});
 
 
 // const ValidationSchema = yup.object({
@@ -83,16 +89,20 @@ const Login = () => {
       console.log(result)
       history.push("/");
 
-    })
-    .catch((error) => {
-      alert("login fail")
-      window.location.reload();
-      error = new Error();
-    });
+  const formik = useFormik({
+    validationSchema: ValidationSchema,
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: (values : any) => {
+    //   dispatch(loginUser(values, history));
+    //   setIsError(true);
 
-    setLoading(false);
-  }
-  
+      // how does this work? -> where to get user data
+    },
+  });
+
   return (
     <Container maxWidth={false} className="formContainer">
       <Box
