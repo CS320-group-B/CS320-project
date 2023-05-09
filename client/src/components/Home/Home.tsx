@@ -1,6 +1,4 @@
 import "./Home.css";
-import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
 
 const descriptionCard = function(description: string, link: string, linkName: string) {
   return (
@@ -20,9 +18,7 @@ const descriptionCard = function(description: string, link: string, linkName: st
 }
 
 function Home () {
-  const testContext = useContext(UserContext);
 
-  testContext.setUserData({user: "Hello, World", track: "hi"})
 
     return (
         <header className="App-header h-screen bg-[#004a73]">
@@ -34,8 +30,6 @@ function Home () {
             {descriptionCard("Adjust your profile", "/Profile", "My profile")}
             {descriptionCard("See course description and requirements", "/Track", "Course list")}
           </div>
-
-          <div>test {testContext?.userData?.user}</div>
         </header>
     );
 }

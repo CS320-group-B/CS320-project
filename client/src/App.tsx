@@ -12,8 +12,8 @@ import { UserContextProvider } from './context/UserContext';
 
 export default function App() { 
 
-  return (<UserContextProvider>
-    
+  return (
+  <UserContextProvider>  
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -25,7 +25,6 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
 
         </Routes>
-
       </BrowserRouter>
     </UserContextProvider>
   );
