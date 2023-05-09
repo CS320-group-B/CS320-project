@@ -6,7 +6,7 @@ import { User } from '../types/user';
 
 
 export type UserDataType = {
-    user: String; // for testing purposes, is a String instead of a User
+    user: User; // for testing purposes, is a String instead of a User
     track: any;
   };
   
