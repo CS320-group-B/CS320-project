@@ -19,7 +19,7 @@ function Navbar() {
           return <li className={"px-4 py-2 " + active}><a href={item.path}>{item.name}</a></li>
         })}
         <h1 className={"px-4 py-2 "}> {user?.email}</h1>
-        <button onClick = {logout}> logout</button>
+        <button onClick = {logout}> Logout</button>
       </ul>
     </div>
   );

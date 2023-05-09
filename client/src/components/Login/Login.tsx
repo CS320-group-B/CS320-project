@@ -10,53 +10,13 @@ import {
   Grid,
   Link
 } from "@mui/material";
-import axios from 'axios';
+// import axios from 'axios';
+import {login} from "../api_file";
+
 // import useLocalStorage from "use-local-storage";
-import {UserContext} from "../../context/UserContext"
-
-
-// const ValidationSchema = yup.object({
-//   email: yup.string().email("Invalid email").required("Email is required"),
-//   password: yup
-//     .string()
-//     .min(8, "Password's length must be greater than 8")
-//     .required("Password is required"),
-// });
-
-// interface FormValues {
-//   email: string;
-//   password: string;
-// }
+// import {UserContext} from "../../context/UserContext"
 
 const Login = () => {
-//   const formik = useFormik({
-//     validationSchema: ValidationSchema,
-//     initialValues: {
-//       email: "",
-//       password: "",
-//     },
-//     onSubmit: (values : FormValues) => {
-      
-//       const configuration = {
-//         method: "post",
-//         url: "http://localhost:5000/user/signup",
-//         data: {
-//           email: values.email,
-//           password: values.password
-//         }
-//       };
-
-//       axios(configuration)
-//       .then((result) => {
-//         console.log(result);
-//       })
-//       .catch((error) => {
-//         error = new Error();
-//       });
-//     },
-//   });
-
-  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,28 +24,17 @@ const Login = () => {
   // const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: []});
   // const { userData, setUserData } = useContext(UserContext);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
-    const configuration = {
-      method: "post",
-      url: "http://localhost:5000/user/signin",
-      data: {
-        email,
-        password
-      }
-    };
-
-    axios(configuration)
-    .then((result) => {
-      alert("login successfully")
-      //Create user
+    try {
+      const userData = {email, password};
+      const result = await login(userData);
       const userdata = {
-        id: result.data.result._id,
+        id: result.result._id,
         name: "",
         bio: "",
-        email: result.data.result.email,
+        email: result.result.email,
         createdAt: "",
         avatar: "",
         graduation: {
@@ -94,23 +43,24 @@ const Login = () => {
         },
         subfield: "",
         major: "",
-        planned_courses: result.data.result.planned,
-        taken_courses: result.data.result.taken,
-        token: result.data.token
+        planned_courses: result.result.planned,
+        taken_courses: result.result.taken,
+        token: result.token
       }
 
       // setUserData({user: userdata, track: "" }); 
       // console.log(userData);
       sessionStorage.setItem("user", JSON.stringify(userdata));
+      alert("login successfully")
+      window.location.reload();
       // setUser(user);
-
-    })
-    // .catch((error) => {
-    //   alert("login fail")
-    //   window.location.reload();
-    //   error = new Error();
-    // });
-
+    } catch (error) {
+      alert("login fail")
+      window.location.reload();
+      console.log(error);
+      error = new Error();
+    }
+    
     setLoading(false);
   }
   

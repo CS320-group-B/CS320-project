@@ -13,6 +13,7 @@ import {
 import {useState,useEffect} from 'react';
 import axios from "axios";
 import useLocalStorage from "use-local-storage";
+import { signup } from "../api_file";
 
 
 const Signup = () => {
@@ -57,7 +58,7 @@ const Signup = () => {
       }
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       if(emailError) {
@@ -68,6 +69,25 @@ const Signup = () => {
         alert(confirmError);
       } else {
 
+        try {
+          const data = {email,password,confirmPassword};
+          const result = await signup(data);
+          const user = {
+            _id: result.result._id,
+            email: result.result.email,
+            planned: result.result.planned,
+            taken: result.result.taken,
+            token: result.token
+          }
+          sessionStorage.setItem("user", JSON.stringify(user));
+          alert("signin successfully")
+          window.location.reload();
+        } catch (error) {
+          alert("signup fail")
+          error = new Error();
+        }
+
+
         const configuration = {
           method: "post",
           url: "http://localhost:5000/user/signup",
@@ -77,24 +97,6 @@ const Signup = () => {
             confirmPassword
           }
         };
-
-        axios(configuration)
-        .then((result) => {
-          setRegister(true);
-          const user = {
-            _id: result.data.result._id,
-            email: result.data.result.email,
-            planned: result.data.result.planned,
-            taken: result.data.result.taken,
-            token: result.data.token
-          }
-    
-          setUser(user);
-        })
-        .catch((error) => {
-          alert("login fail")
-          error = new Error();
-        });
       }
     }
 
@@ -199,11 +201,6 @@ const Signup = () => {
                     </Link>
                   </Grid>
                 </Grid>
-                {register ? (
-                  <p className="text-success">You Are Registered Successfully</p>
-                ) : (
-                  <p className="text-danger">You Are Not Registered</p>
-                )}
               </Box>
             </Box>
           </Container>
