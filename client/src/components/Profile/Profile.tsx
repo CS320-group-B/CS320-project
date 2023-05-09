@@ -4,6 +4,7 @@ import { track } from "../../constants/Track";
 import { Course } from "../../types/course";
 import { courses } from "../../constants/Course";
 import { user } from "../../constants/User";
+//import{updateUser} from "../../../../server/controllers/users";
 
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
 
@@ -285,7 +286,7 @@ function getSeason(date: Date): string {
 
 }
 function onProfileFormSubmit() {
-  //do stuff
+   //do stuff
 }
 function getStatus(s: any): { status: string, color: string } {
   const now = new Date();
