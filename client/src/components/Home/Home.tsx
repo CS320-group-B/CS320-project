@@ -11,13 +11,15 @@ const descriptionCard = function(description: string, link: string, linkName: st
           {linkName}
         </a>
       </div>
-      
+
     </div>
     
   )
 }
 
 function Home () {
+
+
     return (
         <header className="App-header h-screen bg-[#004a73]">
           <p className="text-3xl text-center text-white pt-[10%] mb-16">
