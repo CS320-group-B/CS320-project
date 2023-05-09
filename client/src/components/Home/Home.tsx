@@ -11,24 +11,29 @@ const descriptionCard = function (description: string, link: string, linkName: s
       </a>
 
 
+
     </div>
 
   )
 }
 
-function Home() {
-  return (
 
-    <div>
-      <p className="text-3xl text-center text-black pt-4 mb-16 mt-16">
-        Welcome to Major Planner, an app to help you plan your course schedules
-      </p>
-      <div className="flex flex-row px-16 py-16">
-        {descriptionCard("Adjust your profile", "/Profile", "My profile")}
-        {descriptionCard("See course description and requirements", "/Track", "Course list")}
-      </div>
-    </div>
-  );
+function Home () {
+
+
+    return (
+        <header className="App-header h-screen bg-[#004a73]">
+          <p className="text-3xl text-center text-white pt-[10%] mb-16">
+            Welcome to Major Planner, an app to help you plan your course schedules
+          </p>
+          <div className="container flex flex-row px-16 py-16x">
+            {descriptionCard("Check your saved schedule", "/Schedule", "My schedule")}
+            {descriptionCard("Adjust your profile", "/Profile", "My profile")}
+            {descriptionCard("See course description and requirements", "/Track", "Course list")}
+          </div>
+        </header>
+    );
+
 }
 
 export default Home
