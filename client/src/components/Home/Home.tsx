@@ -1,21 +1,22 @@
-import "./Home.css";
 
-const descriptionCard = function(description: string, link: string, linkName: string) {
+const descriptionCard = function (description: string, link: string, linkName: string) {
   return (
-    <div className="container text-center bg-white mx-6 pb-7 rounded-md border-2 border-black">
+    <div className="w-full text-center  mx-6 pb-7 rounded-md border-2  ">
       <p className="my-6">
         {description}
       </p>
-      <div className="hover:-translate-y-1 transition-all">
-        <a href={link} className="text-xl text-blue-400 hover:translate-y-0">
-          {linkName}
-        </a>
-      </div>
+
+      <a href={link} className="text-xl text-blue-500 hover:text-blue-700 transition-all">
+        {linkName}
+      </a>
+
+
 
     </div>
-    
+
   )
 }
+
 
 function Home () {
 
@@ -32,6 +33,7 @@ function Home () {
           </div>
         </header>
     );
+
 }
 
 export default Home

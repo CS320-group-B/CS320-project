@@ -14,12 +14,22 @@ export const track: Track = {
     semesters: [
         {
             year: 2022,
+            season: "Spring",
+            classes: [
+                "COMPSCI 250",
+                "MATH 230",
+                "COMPSCI 230",
+                "KIN 100"
+            ]
+        },
+        {
+            year: 2022,
             season: "Fall",
             classes: [
                 "COMPSCI 220",
 
                 "MATH 235",
-                "COMPSCI 230",
+                "COMPSCI 240",
                 "KIN 110"
             ]
         },
