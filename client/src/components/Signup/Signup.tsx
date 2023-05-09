@@ -12,12 +12,10 @@ import {
 
 import {useState,useEffect} from 'react';
 import axios from "axios";
-import useLocalStorage from "use-local-storage";
 import { signup } from "../api_file";
 
 
 const Signup = () => {
-    const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: [], token: ""});
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

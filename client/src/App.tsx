@@ -1,4 +1,5 @@
 import Flow from "./components/Track/Flow";
+import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Home/Home";
@@ -6,18 +7,15 @@ import Profile from "./components/Profile/Profile";
 import Schedule from "./components/Schedule/Schedule";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
-// import useLocalStorage from "use-local-storage";
+import {UserDataType, UserContext} from "./context/UserContext"
 
 export default function App() {
-  // const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: [], token: ""});
-
-  // const logout = () => {
-  //   setUser({_id: "", email: "", taken: [], planned: [], token: ""});
-  // }
+  const [userData, setUserData] = React.useState<UserDataType | null>(null);
 
   return (
     <BrowserRouter>
-        <Navbar />
+        <UserContext.Provider value={{ userData, setUserData }}>
+          <Navbar></Navbar>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
@@ -26,6 +24,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
+        </UserContext.Provider>
     </BrowserRouter>
   );
 }

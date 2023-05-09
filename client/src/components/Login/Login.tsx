@@ -13,23 +13,45 @@ import {
 // import axios from 'axios';
 import {login} from "../api_file";
 
-// import useLocalStorage from "use-local-storage";
-// import {UserContext} from "../../context/UserContext"
+import {UserContext,UserDataType} from "../../context/UserContext"
 
 const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [user, setUser] = useLocalStorage("user", {_id: "", email: "", taken: [], planned: []});
   // const { userData, setUserData } = useContext(UserContext);
+  // const [user, setUser] = useState<UserDataType|null>(null);
+
+  // React.useEffect(() => {
+  //   setUserData(user);
+  // }, [user]);
+
+  // let userdata = {
+  //   id: "",
+  //   name: "",
+  //   bio: "",
+  //   email: "",
+  //   createdAt: "",
+  //   avatar: "",
+  //   graduation: {
+  //       year: 2025,
+  //       season: "",
+  //   },
+  //   subfield: "",
+  //   major: "",
+  //   planned_courses: "",
+  //   taken_courses: "",
+  //   token: ""
+  // }
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const userData = {email, password};
-      const result = await login(userData);
+      const userDat = {email, password};
+      const result = await login(userDat);
       const userdata = {
         id: result.result._id,
         name: "",
@@ -48,8 +70,7 @@ const Login = () => {
         token: result.token
       }
 
-      // setUserData({user: userdata, track: "" }); 
-      // console.log(userData);
+      // setUser({user: userdata, track: "" }); 
       sessionStorage.setItem("user", JSON.stringify(userdata));
       alert("login successfully")
       window.location.reload();
