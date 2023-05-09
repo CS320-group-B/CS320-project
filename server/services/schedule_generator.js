@@ -174,12 +174,96 @@ function satisfiesCSRequirements(coursesTaken) {
   const hasTakenUpperLevelCourses = (num300PlusTaken >= 4 || num300PlusTaken >= 3 && outsideElectives.some((course) => coursesTaken.includes(course))) && num400PlusTaken >= 3 && coursesTaken.includes('COMPSCI 311');
   const hasTakenScienceCourses = numScienceTaken >= 2;
 
-  return hasTakenCoreCourses && hasTakenMathCourses && hasTakenIE && hasTakenUpperLevelCourses && hasTakenScienceCourses;
+  return [hasTakenCoreCourses, hasTakenMathCourses, hasTakenIE, hasTakenUpperLevelCourses, hasTakenScienceCourses];
+}
+
+function scoreCSRequirements(coursesTaken) {
+   // Define the required courses
+   const coreCourses = [
+    'COMPSCI 220',
+    'COMPSCI 230',
+    'COMPSCI 240',
+    'COMPSCI 250',
+    'COMPSCI 311'
+  ];
+  const mathCourses = [
+    ['MATH 131'],
+    ['MATH 132'],
+    ['MATH 235'],
+    ['MATH 233', 'MATH 515']
+  ];
+
+  const scienceCourses = [
+    ['CHEM 111', 'CHEM 121'],
+    ['CHEM 112', 'CHEM 122'],
+    ['GEOL 101'], // i have to include GEOL 103 and GEOL 131 or GEOL 105 and GEOL 131
+    ['PHYSICS 151', 'PHYSICS 181'],
+    ['PHYSICS 152', 'PHYSICS 182'] 
+  ];
+
+  const outsideElectives = [
+    'ECE 353',
+    'ECE 547',
+    'ECE 668',
+    'LINGUIST 401',
+    'MATH 411',
+    'MATH 545',
+    'MATH 551',
+    'MATH 552'
+  ];
+
+  // Count the number of required courses that have been taken
+  let num300PlusTaken = 0;
+  let num400PlusTaken = 0;
+
+  for (const course of coursesTaken) {
+    let courseSubject = course.split(" ")[0];
+    let courseNum = course.split(" ")[1];
+    if (courseSubject !== 'COMPSCI') continue;
+    if (courseNum.startsWith('3')) {
+      num300PlusTaken++;
+    } else if (courseNum.startsWith('4')) {
+      num400PlusTaken++;
+    }
+  }
+
+  let numScienceTaken = 0;
+
+  for (let i = 0; i < scienceCourses.length; i++) {
+    const scienceCourse = scienceCourses[i];
+    const hasScienceCourse = scienceCourse.some((course) => coursesTaken.includes(course));
+
+    if (hasScienceCourse) {
+      numScienceTaken++;
+    }
+  }
+  // Check if the major requirements are satisfied
+  const numCoreCoursesTaken = coreCourses.reduce((total, course) => {
+    if (coursesTaken.includes(course)) return total + 1;
+    return total;
+  }, 0);
+  const numMathCoursesTaken = mathCourses.reduce((total, course) => {
+    if (course.some((course) => coursesTaken.includes(course))) return total + 1;
+    return total;
+  }, 0);
+  const hasTakenIE = (coursesTaken.includes('COMPSCI 320') || coursesTaken.includes('COMPSCI 326'));
+  if (num300PlusTaken >= 4) {
+    num300PlusTaken = 4;
+  } else if (num300PlusTaken >= 3 && outsideElectives.some((course) => coursesTaken.includes(course))) {
+    num300PlusTaken = 4;
+  }
+  if (num400PlusTaken >= 3) {
+    num400PlusTaken = 3;
+  }
+  const numUpperLevelCoursesTaken = num300PlusTaken + num400PlusTaken;
+  const numScienceCoursesTaken = numScienceTaken >= 2 ? 2 : numScienceTaken;
+
+  return numCoreCoursesTaken + numMathCoursesTaken + hasTakenIE + numUpperLevelCoursesTaken + numScienceCoursesTaken;
 }
 
 let coursesTaken1 = ['COMPSCI 220', 'COMPSCI 230', 'COMPSCI 240', 'COMPSCI 250', 'COMPSCI 311', 'COMPSCI 320', 'COMPSCI 320', 'COMPSCI 320', 'COMPSCI 420', 'COMPSCI 420', 'COMPSCI 420'];
-//console.log(satisfiesCSRequirements(coursesTaken1)); // false
-
+console.log(satisfiesCSRequirements(coursesTaken1)); // [ true, false, true, true, false ]
+console.log(0 + true);
 function scoreSchedule(schedule, preferences) {
   let score = 0;
   
@@ -268,6 +352,59 @@ const professors = [
 
 const score = scoreSchedule(schedule, preferences);
 console.log(score); // outputs 12
+
+function rankCourses(coursesTaken, courses, preferences) {
+  // Initialize an empty array to store the scores for each course
+  const scores = [];
+
+  // Loop through each course
+  for (let i = 0; i < courses.length; i++) {
+    const course = courses[i];
+
+    // Check if the course has already been taken
+    if (coursesTaken.includes(course.key)) {
+      scores.push(-1);
+      continue;
+    }
+
+    // Check if the course has any prerequisites that have not been taken
+    const hasSatisfiedPrerequisites = course.prerequisites.some((prerequisite) => {
+      return prerequisite.options.every((option) => coursesTaken.includes(option));
+    }) || course.prerequisites.length == 0;
+
+    if (!hasSatisfiedPrerequisites) {
+      scores.push(-2);
+      continue;
+    }
+
+    // Calculate the score for the course based on major requirements and student preferences
+    let score = 0;
+
+    // Check if the course satisfies any major requirements
+    score += scoreCSRequirements(coursesTaken.concat(course.key)) - scoreCSRequirements(coursesTaken);
+
+    // Check if the course satisfies any student preferences
+    score += course.professors.reduce((total, professor) => {
+      const prof = findProfessorByKey(professor);
+      if (prof) {
+        return total + (prof.rating * preferences.professorRatingWeight - prof.difficulty * preferences.professorDifficultyWeight)/5;
+      }
+      return total;
+    }, 0);
+
+    // if (course.days.includes(1) || course.days.includes(3) || course.days.includes(5)) {
+    //   score += 1;
+    // }
+
+    // Add the final score for the course to the scores array
+    scores.push(score);
+  }
+
+  // Uses the scores array to return sorted ranked courses along with its score in descending order
+  return scores.map((score, index) => { return { score, course: courses[index].key } }).sort((a, b) => b.score - a.score);
+}
+
+console.log(rankCourses(["COMPSCI 121", "COMPSCI 187"], courses, preferences));
 
 function creditsTaken(coursesTaken) {
   let credits = 0;
