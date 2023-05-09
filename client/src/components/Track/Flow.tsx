@@ -147,6 +147,7 @@ const BasicFlow = () => {
             nodes={initialNodes}
             edges={initialEdges}
             onNodeClick={onClick}
+            defaultViewport={{ x: -20, y: 100, zoom: 0.8 }}
         >
             <div className="overflow-auto collapse md:visible  bg-white w-96 right-8 bottom-48  top-8 rounded-lg shadow-md border-gray border p-6 absolute z-50">
                 {professor ? <div className="text-left">

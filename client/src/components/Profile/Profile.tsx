@@ -1,14 +1,16 @@
 import React, { useState, FC } from "react";
 
-import { track } from "../../constants/Track";
+import { Semester, track } from "../../constants/Track";
 import { Course } from "../../types/course";
 import { courses } from "../../constants/Course";
 import { user } from "../../constants/User";
-import { Avatar, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Avatar, Dialog, FormControl, Select, MenuItem, InputLabel, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import { User } from "../../types/user";
 
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
   const [open, setOpen] = React.useState(false);
+  const [openGenerate, setGenerateOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -16,6 +18,15 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
 
   const handleClose = () => {
     setOpen(false);
+
+  };
+
+  const handleGenerateClickOpen = () => {
+    setGenerateOpen(true);
+  };
+
+  const handleGenerateClose = () => {
+    setGenerateOpen(false);
 
   };
 
@@ -42,7 +53,9 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
         <div className="flex flex-col">
           <div className="flex flex-row justify-between">
             <h1 className="text-2xl font-bold">Courses</h1>
-            <div className="flex flex-row">
+            <div className="flex flex-row gap-4">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={handleGenerateClickOpen}>Generate Track</button>
+
               <button className="bg-black text-white px-4 py-2 rounded-lg" onClick={handleClickOpen}>Add Course</button>
 
             </div>
@@ -65,7 +78,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                       <h1 className="text-lg font-semibold"> {course.key + " | "}{course.name} {'(' + course.credits + ' credits)'}</h1>
 
                       <h5 className="text-md"> By: {course.professors.map(p => p.split('-').map(c => c[0].toUpperCase() + c.substring(1, c.length)).join(' ')).join(', ')}</h5>
-                      <p className="text-sm mt-1 text-gray-500"> {course.description.split('.').slice(0, 3).join('.') + "..."}</p>
+                      <p className="text-sm mt-1 text-gray-500"> {course.description.split('.').slice(0, 2).join('.') + "..."}</p>
 
                     </div>
                   );
@@ -78,8 +91,14 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
       </div>
       <CourseDialog
         courses={courses}
+        user={user}
         open={open}
         onClose={handleClose}
+      />
+      <GenerateDialog
+        user={user}
+        open={openGenerate}
+        onClose={handleGenerateClose}
       />
     </div >
 
@@ -89,12 +108,17 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
 export interface SimpleDialogProps {
   open: boolean;
   courses: Course[];
+  user: User,
   onClose: () => void;
 }
 
 function CourseDialog(props: SimpleDialogProps) {
-  const { onClose, courses, open } = props;
+  const { onClose, courses, open, user } = props;
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+  const [season, setSeason] = useState<string>('fall');
+  const now = new Date();
+  const [year, setYear] = useState<number>(now.getFullYear());
+
   const handleClose = () => {
     setSelectedCourses([]);
     onClose();
@@ -114,12 +138,59 @@ function CourseDialog(props: SimpleDialogProps) {
     onClose();
   }
 
+  const handleSeasonChange = (season: string) => {
+    setSeason(season);
+  }
+
+  const handleYearChange = (year: number) => {
+    setYear(year);
+  }
 
 
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>
-        <h1 className="text-xl font-semibold mx-auto pt-4">Select Courses</h1>
+        <div className="flex flex-row w-full h-10">
+          <h1 className="text-xl font-semibold  pt-4 mb-4 mr-auto">Select Courses</h1>
+
+          <FormControl
+          >
+            <InputLabel id="demo-simple-select-label">Season</InputLabel>
+            <Select
+
+              value={season}
+              label="Season"
+              className=" h-10"
+
+              onChange={(e) => handleSeasonChange(e.target.value)}
+            >
+              <MenuItem value={'fall'}>Fall</MenuItem>
+              <MenuItem value={'spring'}>Spring</MenuItem>
+
+            </Select>
+          </FormControl>
+          <div className="w-4" />
+
+
+          <FormControl >
+            <InputLabel id="demo-simple-select-label">Year</InputLabel>
+            <Select
+
+              className=" h-10"
+              value={year}
+              label="Year"
+              onChange={(e) => handleYearChange(e.target.value as number)}
+            >
+              {
+                Array.from({ length: 4 }, (_, i) => user.graduation.year - 3 + i).reverse()
+                  .map(y => <MenuItem value={y}>{y}</MenuItem>)
+              }
+
+            </Select>
+          </FormControl>
+        </div>
+
+
       </DialogTitle>
       <DialogContent>
 
@@ -175,6 +246,59 @@ function getStatus(s: any): { status: string, color: string } {
     return { status: "In Progress", color: "text-blue-500" };
   }
   return { status: "✓ Completed", color: "text-green-500" };
+}
+
+function GenerateDialog(props: { open: boolean, user: User, onClose: () => void }) {
+  const { onClose, open, user } = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+
+  const handleSubmit = () => {
+    onClose();
+  }
+
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const season: string = getSeason(now);
+  const semNumber = getNumberOfSemester(user.graduation);
+  return (
+    <Dialog onClose={handleClose} open={open} >
+
+      <DialogTitle>
+        <h1 className="text-xl font-semibold mx-auto pt-4">Generate Major Track</h1>
+      </DialogTitle>
+      <DialogContent>
+        <p className="text-sm mt-4"><strong>Major: </strong> {user.major}</p>
+        <p className="text-sm"><strong>Subfield: </strong> {user.subfield}</p>
+
+        <p className="text-sm"><strong>Graduating: </strong> {user.graduation.season} {user.graduation.year}</p>
+        <p className="text-md mt-2 text-blue-500"><strong> {season} {year}  {' ⟶ '} {user.graduation.season} {user.graduation.year} </strong> </p>
+
+      </DialogContent>
+      <DialogActions >
+        <button className="bg-black text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>Plan {semNumber} Semester{semNumber > 1 ? 's' : ''}</button>
+
+
+      </DialogActions>
+
+    </Dialog>
+  );
+}
+
+function getNumberOfSemester(s: { year: number, season: string }): number {
+  const now = new Date();
+  const year = now.getFullYear();
+  const season: string = getSeason(now);
+  let sem = s.year - year;
+
+  if (s.season === "Fall" && season === "Spring") {
+    sem += 1;
+  }
+  return sem - 1;
 }
 
 export default Profile;
