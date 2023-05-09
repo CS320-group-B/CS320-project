@@ -17,8 +17,11 @@ app.use(cors());
 app.use('/course', courseRoutes);
 app.use('/user', userRoutes);
 
-//const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
-const CONNECTION_URL = process.env.CONNECTION_URL1;
+const CONNECTION_URL = "mongodb+srv://CS320TeamB:Qk7WzAm2U20DtopV@database.lu7pdvp.mongodb.net/?retryWrites=true&w=majority";
+// const CONNECTION_URL = process.env.CONNECTION_URL1;
+
+
+
 
 const PORT = process.env.PORT || 5000;
 
