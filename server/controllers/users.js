@@ -43,7 +43,10 @@ const addUser = async (req, res) => {
 // @desc    Update existing user
 const updateUser = async (req, res) => { 
     try{
-        const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, req.body, {new: true});
+        let upd = req.body;
+        if (upd.hasOwnProperty("taken")){delete upd.taken;}// use add/remove taken to update taken array
+
+        const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, upd, {new: true});
         if (!updatedUser){return res.status(404).json("User not found");}
         res.status(200).json(updatedUser);
     } catch (error){
