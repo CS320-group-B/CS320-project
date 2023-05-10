@@ -11,8 +11,7 @@ const userSchema = mongoose.Schema({
     subfield: { type: String },
     major: { type: String },
     password: { type: String, required: true },
-    taken: [courseSchema], 
-    planned: [courseSchema],
+    taken: [String]
 });
 
 const User = mongoose.model('User', userSchema);
