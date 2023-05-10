@@ -1,15 +1,68 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, Component } from "react";
 import Popup from 'reactjs-popup';//for pop up
 import { track } from "../../constants/Track";
 import { Course } from "../../types/course";
 import { courses } from "../../constants/Course";
 import { user } from "../../constants/User";
+import { useContext } from 'react'
+import { UserContext } from '../../context/UserContext';
+import Q from "q";
 //import{updateUser} from "../../../../server/controllers/users";
+//import React, { Component } from 'react';
+
+let initialValues = {
+  name: '',
+  email:'',
+  bio:'',
+  graduation:'',
+  major:''
+}
 
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
 
+ 
+  const [quote, setQuote] = useState(initialValues);
+  const onChange = (e: { target: { name: any; value: any; }; }) => {
+    setQuote({ ...quote, [e.target.name]: e.target.value });
+  }
+  const {userData, setUserData } = useContext(UserContext);
+  function onProfileFormSubmit() {    
+    
+   
+    
+    userData!.user!.name = quote.name;
+    userData!.user!.bio = quote.bio;
+    userData!.user!.email = quote.email;
+    userData!.user!.graduation = {year: 2024, season:quote.graduation};
+    userData!.user!.major = quote.major;
 
 
+    /*
+    const user = {
+      id: userData?.user.id,
+      name: quote.name,
+      bio: quote.bio,
+      email: quote.email,
+      createdAt: userData?.user?.taken_courses,
+      avatar: userData?.user.avatar,
+      graduation: {
+          year: quote.graduation,
+          season: quote.graduation,
+      },
+      subfield: userData?.user.subfield,
+      major: quote.major,
+      taken_courses: userData?.user.taken_courses,
+      planned_courses: userData?.user.taken_courses,
+  }*/
+  
+  
+  //
+  //track is not modified
+    //const userDataType = {user: user, track: userData?.track};
+    setUserData(userData);
+     //do stuff
+    
+  }
   const now = new Date();
 
   const plannedCourses: Course[] = track.semesters.filter((s, i) => {
@@ -53,7 +106,9 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               <span className="text-gray-700">Your name</span>
                               <input
                                 type="text"
+                                value={quote.name || ""}
                                 name="name"
+                                onChange={onChange}
                                 className="
 
             w-full
@@ -76,6 +131,8 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               <input
                                 name="email"
                                 type="email"
+                                onChange={onChange}
+                                value={quote.email ||""}
                                 className="
             block
             w-full
@@ -98,7 +155,9 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               <span className="text-gray-700">Your Major</span>
                               <input
                                 type="text"
-                                name="name"
+                                name="major"
+                                onChange={onChange}
+                                value={quote.major ||""}
                                 className="
 
             w-full
@@ -120,7 +179,9 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               <span className="text-gray-700">Your Graduation Semester</span>
                               <input
                                 type="text"
-                                name="name"
+                                name="graduation"
+                                onChange={onChange}
+                                value={quote.graduation ||""}
                                 className="
 
             w-full
@@ -141,7 +202,9 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                             <label>
                               <span className="text-gray-700">Bio</span>
                               <textarea
-                                name="message"
+                                name="bio"
+                                onChange={onChange}
+                                value={quote.bio ||""}
                                 className="
             block
             w-full
@@ -177,13 +240,13 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               Update Profile
                             </button>
                           </div>
-                          
+
                         </form>
                       </div>
                     </div>
-                    
+
                   </fieldset>
-                  
+
                 </form>
               </Popup>
 
@@ -285,9 +348,7 @@ function getSeason(date: Date): string {
   }
 
 }
-function onProfileFormSubmit() {
-   //do stuff
-}
+
 function getStatus(s: any): { status: string, color: string } {
   const now = new Date();
   const planned = (s.year === now.getFullYear() && getSeason(now) !== s.season && s.season === "Fall") || s.year > now.getFullYear();
