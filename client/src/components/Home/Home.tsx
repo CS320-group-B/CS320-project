@@ -18,20 +18,24 @@ const descriptionCard = function(description: string, link: string, linkName: st
     
   )
 }
-const rows = [];
-for (let i = 0; i < 20; i++) {
-    rows.push(<ObjectRow/>);
-}
-return <tbody>{rows}</tbody>;
+// const rows = [];
+// for (let i = 0; i < 20; i++) {
+//     rows.push(<ObjectRow/>);
+// }
+// return <tbody>{rows}</tbody>;
 
 function Home () {
-    const [listOfCourses, setListOfCourses] = useState([]);
+    const [listOfCourses, setListOfCourses] = useState<any[]>([]);
 
     useEffect(() => {
       Axios.get("http://localhost:3001/getCourses").then((response) => {
         setListOfCourses(response.data);
       });
     }, []);
+    // const rows: typeof listOfCourses[0][] = []
+    // for (let i = 0; i < 20; i++) {
+    //   rows.push(listOfCourses[i]);
+    // }
 
     return (
         <header className="App-header h-screen bg-[#004a73]">
@@ -51,6 +55,13 @@ function Home () {
                 </div>
               )
             })}
+            {/* {[0,1,2].forEach(x=> {
+              return(
+                <div>
+                  <h1>Name: {listOfCourses[x].name}</h1>
+                </div>
+              )
+            })} */}
           </div>
         </header>
     );
