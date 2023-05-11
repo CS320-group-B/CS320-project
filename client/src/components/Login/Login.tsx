@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+// import { useSelector, useDispatch} from "react-redux";
+// import { loginUser } from "../../actions/authActions";
+import * as yup from 'yup';
 import {
   TextField,
   Container,
@@ -11,12 +16,20 @@ import {
   Link
 } from "@mui/material";
 import axios from 'axios';
-//import { createBrowserHistory } from "history";
-//import { SessionContext, getSessionCookie, setSessionCookie } from "../../context/session";
-import { useContext } from 'react'
-import { UserContext } from '../../context/UserContext';
+
+import { login } from "../api_file";
+import UserContext from "../../context/UserContext";
+import { user } from "../../constants/User";
+import { track } from "../../constants/Track";
 import { useNavigate } from "react-router-dom";
 
+const ValidationSchema = yup.object({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(4, "Password's length must be greater than 8")
+    .required("Password is required"),
+});
 
 // const ValidationSchema = yup.object({
 //   email: yup.string().email("Invalid email").required("Email is required"),
@@ -34,82 +47,49 @@ import { useNavigate } from "react-router-dom";
 //const history = createBrowserHistory();
 
 const Login = () => {
-  const { userData, setUserData } = useContext(UserContext);
+  //   const [isError, setIsError] = useState(false); 
+  const context = useContext(UserContext);
+  //   const state = useSelector((state) => ({
+  //     auth: state.auth,
+  //     errors: state.errors,
+  //   }));
+
   const navigate = useNavigate();
+  //   const dispatch = useDispatch();
 
+  // if account is already set
+  //   if (state.auth.isAuthenticated) {
+  //     dispatch(getTransactions(state.auth.user.id));
+  //     history.push("/transaction");
+  //   }
 
-//   const formik = useFormik({
-//     validationSchema: ValidationSchema,
-//     initialValues: {
-//       email: "",
-//       password: "",
-//     },
-//     onSubmit: (values : FormValues) => {
-      
-//       const configuration = {
-//         method: "post",
-//         url: "http://localhost:5000/user/signup",
-//         data: {
-//           email: values.email,
-//           password: values.password
-//         }
-//       };
-
-//       axios(configuration)
-//       .then((result) => {
-//         console.log(result);
-//       })
-//       .catch((error) => {
-//         error = new Error();
-//       });
-//     },
-//   });
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const configuration = {
-      method: "post",
-      url: "http://localhost:5000/user/signin",
-      data: {
-        email,
-        password
-      }
-    };
-
-    axios(configuration)
-    .then((result) => {
-      alert("login successfully")
-      //Add thing do when signin successfully here
-      // setSessionCookie({ email });
-      console.log(result)
-      //history.push("/");
-      console.log("user?", result?.data)
-
-      const token = result?.data?.token
-      console.log(token);
-      setUserData({user: result.data.result, track: "hi"});
+  const formik = useFormik({
+    validationSchema: ValidationSchema,
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values: any) => {
+      // const user = await login(values);
+      // console.log(user);
+      const data = {
+        user: user,
+        track: track,
+      };
+      context.setUserData(data);
+      //localStorage.setItem("data", JSON.stringify(data));
       navigate("/profile");
+      //   dispatch(loginUser(values, history));
+      //   setIsError(true);
+      
+    },
+  });
 
-    })
-    .catch((error) => {
-      alert("login fail")
-      alert(error)
-      window.location.reload();
-      error = new Error();
-    });
 
-    setLoading(false);
-  }
-  
-  return (
-    <Container maxWidth={false} className="formContainer">
-      <Box
+
+    return(
+    <Container maxWidth = { false} className = "formContainer" >
+        <Box
           sx={{
             marginTop: 8,
             display: 'flex',
@@ -117,63 +97,61 @@ const Login = () => {
             alignItems: 'center',
           }}
         >
-        <Typography variant="h4" className="title">Welcome to Course Scheduler!</Typography>
-        <Box component="form"  noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              type="text"
-              value = {email}
-              onChange = {e => setEmail(e.target.value)}
-              // value={formik.values.email}
-              // onChange={formik.handleChange}
-              // error={Boolean(formik.errors.email)}
-              // helperText={formik.errors.email}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value = {password}
-              onChange = {e => setPassword(e.target.value)}
-              // value={formik.values.password}
-              // onChange={formik.handleChange}
-              // error={Boolean(formik.errors.password)}
-              // helperText={formik.errors.password}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link href="/Signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-    </Container>
+          <Typography variant="h4" className="title">Welcome to Course Scheduler!</Typography>
+        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          type="text"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={Boolean(formik.errors.email)}
+          helperText={formik.errors.email}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={Boolean(formik.errors.password)}
+          helperText={formik.errors.password}
+        />
+        <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        />
+        <Button
+
+          fullWidth
+          onClick={() => formik.handleSubmit()}
+
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Sign In
+        </Button>
+        <Grid container>
+          <Grid item>
+            <Link href="/signup" variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+    </Container >
   );
 };
 

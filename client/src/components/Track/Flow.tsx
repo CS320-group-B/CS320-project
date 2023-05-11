@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import ReactFlow, {
     Node,
     addEdge,
@@ -17,8 +17,9 @@ import "reactflow/dist/style.css";
 import { courses } from "../../constants/Course";
 
 import { Professor, professors } from "../../constants/Professors";
-import { track } from "../../constants/Track";
 import { Course } from "../../types/course";
+import { Track } from "../../constants/Track";
+import UserContext from "../../context/UserContext";
 
 
 
@@ -50,6 +51,10 @@ const BasicFlow = () => {
     const onProfessorClick = (professor: Professor) => {
         onProfessorChange(professor);
     };
+
+    const userContext = useContext(UserContext);
+    const user = userContext.userData!.user;
+    const track: Track = userContext.userData!.track;
 
     const getRatingColor = () => {
         const rating = professor?.rating;

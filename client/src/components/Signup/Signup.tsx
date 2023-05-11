@@ -7,199 +7,154 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
-  Link
+  Link,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select
 } from "@mui/material";
 
-import {useState,useEffect} from 'react';
-import axios from "axios";
+import { signup } from '../api_file'
+import { user } from "../../constants/User";
+import { useState } from "react";
 
 const Signup = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [first, setFirstname] = useState("");
-    const [last, setLastname] = useState("");
-    const [emailError, setEmailError] = useState("Email is Required");
-    const [passwordError, setPasswordError] = useState("Password is required");
-    const [confirmError, setConfirmError] = useState("Confirm password is required");
-    const [register, setRegister] = useState(false);
+  //const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [season, setSeason] = useState<string>('fall');
+  const now = new Date();
+  const [year, setYear] = useState<number>(now.getFullYear() + 4);
 
-    useEffect(() => {validate();}, [password,email, confirmPassword]);
-    
-    const validate = () => {
-      if (!email) {
-        setEmailError("Email is Required");
-      } else if (!new RegExp(/\S+@\S+\.\S+/).test(email)) {
-        setEmailError("Incorrect email format");
-      } else {
-        setEmailError("");
-      }
+  const handleSeasonChange = (season: string) => {
+    setSeason(season);
+  }
 
-      if (!password) {
-        setPasswordError("Password is required");
-      } else if (password.length < 8) {
-        setPasswordError("Password must have a minimum 8 characters");
-      } else {
-        setPasswordError("");
-      }
+  const handleYearChange = (year: number) => {
+    setYear(year);
+  }
 
-      if (!confirmPassword) {
-        setConfirmError("Confirm password is required");
-      } else if (confirmPassword.length < 8) {
-        setConfirmError("Confirm password must have a minimum 8 characters");
-      } else if (confirmPassword !== password) {
-        setConfirmError("Passwords do not match");
-      } else {
-        setConfirmError("");
-      }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const userData = {
+      name: data.get('firstName'),
+      email: data.get('email'),
+      password: data.get('password'),
+      confirmPassword: data.get('password')
     }
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+    const result = await signup(userData)
+    console.log(result)
+  };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+  return (
+    <Container component="main" maxWidth="xs" className={'border border-gray-300 rounded-lg pb-12 mt-4'}>
+      {/* <CssBaseline /> */}
+      <Box
+        sx={{
+          marginTop: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} >
+              <TextField
+                autoComplete="given-name"
+                name="name"
+                required
+                fullWidth
+                id="name"
+                label="Full Name"
+                autoFocus
+              />
+            </Grid>
 
-      if(emailError) {
-        alert(emailError);
-      } else if (passwordError) {
-        alert(passwordError);
-      } else if (confirmError) {
-        alert(confirmError);
-      } else {
-        const name = first + " " + last
-        const configuration = {
-          method: "post",
-          url: "http://localhost:5000/user/signup",
-          data: {
-            name, // why wasn't this here
-            email,
-            password,
-            confirmPassword
-          }
-        };
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl className=" w-full"
+              >
+                <InputLabel id="season-label">Season</InputLabel>
+                <Select
 
-        axios(configuration)
-        .then((result) => {
-          setRegister(true);
-          //Add thing do when signup successfully here
-          alert("registered successfully");
-
-          
-        })
-        .catch((error) => {
-          alert(error)
-          error = new Error();
-        });
-      }
-    }
-
-
-    return (
-          <Container component="main" maxWidth="xs">
-            {/* <CssBaseline /> */}
-            <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Typography component="h1" variant="h5">
-                Sign up
-              </Typography>
-              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="given-name"
-                      name="firstName"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      value = {first}
-                      onChange = {(e) => {setFirstname(e.target.value)}}
-                      autoFocus
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      name="lastName"
-                      value={last}
-                      onChange = {(e) => setLastname(e.target.value)}
-                      autoComplete="family-name"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      value={email}
-                      onChange = {(e) => {setEmail(e.target.value)}}
-                      autoComplete="email"
-                    />
-                  </Grid>
-                  <Typography color="#ff0000" sx = {{mx: 2}} variant ="caption"> {emailError? emailError:""} </Typography>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      value={password}
-                      onChange = {(e) => {setPassword(e.target.value)}}
-                      autoComplete="new-password"
-                    />
-                  </Grid>
-                  <Typography color="#ff0000" sx = {{mx: 2}} variant ="caption"> {passwordError? passwordError:""} </Typography>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      name="confirmPassword"
-                      label="Confirm Password"
-                      type="password"
-                      id="confirmPassword"
-                      value={confirmPassword}
-                      onChange = {(e) => {
-                        setConfirmPassword(e.target.value);
-                      }}
-                      autoComplete="new-password"
-                    />
-                  </Grid>
-                  <Typography color="#ff0000" sx = {{mx: 2}} variant ="caption"> {confirmError? confirmError:""} </Typography>
-                </Grid>
-                <Button
-                  type="submit"
+                  value={season}
+                  label="Season"
                   fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
+
+                  onChange={(e) => handleSeasonChange(e.target.value)}
                 >
-                  Sign Up
-                </Button>
-                <Grid container justifyContent="flex-end">
-                  <Grid item>
-                    <Link href="/Login" variant="body2">
-                      Already have an account? Sign in
-                    </Link>
-                  </Grid>
-                </Grid>
-                {register ? (
-                  <p className="text-success">You Are Registered Successfully</p>
-                ) : (
-                  <p className="text-danger">You Are Not Registered</p>
-                )}
-              </Box>
-            </Box>
-          </Container>
-      );
+                  <MenuItem value={'fall'}>Fall</MenuItem>
+                  <MenuItem value={'spring'}>Spring</MenuItem>
+
+                </Select>
+              </FormControl>
+              <div className="w-4" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl className=" w-full"
+              >
+                <InputLabel id="year-label">Year</InputLabel>
+                <Select
+
+                  value={year}
+                  fullWidth
+                  label="Year"
+                  onChange={(e) => handleYearChange(e.target.value as number)}
+                >
+                  {
+                    Array.from({ length: 5 }, (_, i) => user.graduation.year - 1 + i).reverse()
+                      .map(y => <MenuItem value={y}>{y}</MenuItem>)
+                  }
+
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href="/login" variant="body2">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    </Container>
+  );
 }
 export default Signup;

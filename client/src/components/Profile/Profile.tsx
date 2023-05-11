@@ -1,13 +1,14 @@
-import React, { useState, FC } from "react";
-import Popup from 'reactjs-popup';//for pop up
+import React, { useState, FC, useContext } from "react";
+
+import { Semester, Track } from "../../constants/Track";
 import { Course } from "../../types/course";
 import { courses } from "../../constants/Course";
-import { user } from "../../constants/User";
-import { Semester, track } from "../../constants/Track";
-
 import { Avatar, Dialog, FormControl, Select, MenuItem, InputLabel, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { User } from "../../types/user";
+import UserContext from "../../context/UserContext";
+import Popup from 'reactjs-popup';//for pop up
+
 let initialValues = {
   name: '',
   email: '',
@@ -15,9 +16,14 @@ let initialValues = {
   graduation: '',
   major: ''
 }
+
+
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
   const [open, setOpen] = React.useState(false);
   const [openGenerate, setGenerateOpen] = React.useState(false);
+  const userContext = useContext(UserContext);
+  const user = userContext.userData!.user;
+  const track: Track = userContext.userData!.track;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -375,7 +381,7 @@ function CourseDialog(props: SimpleDialogProps) {
 
           <FormControl
           >
-            <InputLabel id="demo-simple-select-label">Season</InputLabel>
+            <InputLabel id="season-label">Season</InputLabel>
             <Select
 
               value={season}
@@ -393,7 +399,7 @@ function CourseDialog(props: SimpleDialogProps) {
 
 
           <FormControl >
-            <InputLabel id="demo-simple-select-label">Year</InputLabel>
+            <InputLabel id="year-label">Year</InputLabel>
             <Select
 
               className=" h-10"
