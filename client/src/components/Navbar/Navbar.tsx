@@ -1,9 +1,30 @@
 import { useLocation, useRouteLoaderData } from 'react-router-dom'
 import { UserContext } from "../../context/UserContext"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
+
 
 function Navbar() {
   const { userData, setUserData } = useContext(UserContext)
+  
+  
+
+  useEffect(() => {
+    // this happens when the component is changed
+    // i.e page reloads, goes to a different page    
+    const fromStorage = localStorage.getItem("userData")
+    if (fromStorage !== null) {
+      setUserData(JSON.parse(fromStorage));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userData !== null) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+    }
+  }, [userData]);
+
+
+
   console.log("nav", userData);
 
   const location = useLocation();

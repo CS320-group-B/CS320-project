@@ -39,35 +39,6 @@ export type UserDataType = {
   export const UserContextProvider = ({ children }: Props) => {
     const [userData, setUserData] = React.useState<UserDataType | null>(null);
 
-    useEffect(() => {
-      // this happens when the component is changed
-      // i.e page reloads, goes to a different page
-      console.log("userContextProvider reloaded")
-
-      /*
-      const fromStorage = localStorage.getItem("userData")
-
-      if (fromStorage !== null) {
-        setUserData(JSON.parse(fromStorage));
-      }
-      */
-
-      
-
-    });
-
-    
-    useEffect(() => {
-      // this happens when userData is changed 
-      // i.e setUserData is called somewhere
-      console.log("userData changed")
-
-      //localStorage.setItem("userData", JSON.stringify(userData))
-
-
-    }, [userData]);
-
-
     return (
       <UserContext.Provider value={{ userData, setUserData }}>
         {children}
