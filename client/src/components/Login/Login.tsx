@@ -15,6 +15,8 @@ import axios from 'axios';
 //import { SessionContext, getSessionCookie, setSessionCookie } from "../../context/session";
 import { useContext } from 'react'
 import { UserContext } from '../../context/UserContext';
+import { useNavigate } from "react-router-dom";
+
 
 // const ValidationSchema = yup.object({
 //   email: yup.string().email("Invalid email").required("Email is required"),
@@ -33,6 +35,7 @@ import { UserContext } from '../../context/UserContext';
 
 const Login = () => {
   const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
 
 
 //   const formik = useFormik({
@@ -91,6 +94,7 @@ const Login = () => {
       const token = result?.data?.token
       console.log(token);
       setUserData({user: result.data.result, track: "hi"});
+      navigate("/profile");
 
     })
     .catch((error) => {
