@@ -1,4 +1,4 @@
-const {courseSchema} = require('./course.js');
+const {courseSchema} = require('./courses.js');
 
 const mongoose = require('mongoose');
 
@@ -15,6 +15,6 @@ const userSchema = mongoose.Schema({
     planned: [courseSchema],
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('users', userSchema);
 
 module.exports = User;

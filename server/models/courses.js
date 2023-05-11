@@ -15,6 +15,9 @@ const courseSchema = mongoose.Schema({
     prerequisites: [prerequisitesSchema]
 });
 
-const Course = mongoose.model('Course', courseSchema)
+const Course = mongoose.model('courses', courseSchema)
 
-module.exports = { Course, courseSchema };
+module.exports = {
+    CourseCollection: Course,
+    courseSchema
+  }

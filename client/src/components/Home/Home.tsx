@@ -18,6 +18,11 @@ const descriptionCard = function(description: string, link: string, linkName: st
     
   )
 }
+const rows = [];
+for (let i = 0; i < 20; i++) {
+    rows.push(<ObjectRow/>);
+}
+return <tbody>{rows}</tbody>;
 
 function Home () {
     const [listOfCourses, setListOfCourses] = useState([]);

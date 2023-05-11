@@ -1,32 +1,43 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 
-const courseRoutes = require('./routes/courses.js');
-const userRoutes = require('./routes/users.js');
-const professorRoutes = require('./routes/professors.js');
-const sectionRoutes = require('./routes/sections.js');
-
-const app = express();
-dotenv.config();
-
-app.use(bodyParser.json({ limit: '30mb', extended: true }));
-app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
+const express = require('express')
+const app = express()
+const cors = require("cors");
+const courses = require("./models/courses")
+const User = require("./models/users")
+app.use(express.json());
 app.use(cors());
 
-app.use('/course', courseRoutes);
-app.use('/user', userRoutes);
-app.use('/professor', professorRoutes);
-app.use('/section', sectionRoutes);
+//mongoDB code
+const mongoose = require('mongoose')
+const DATABASE_URL =  "mongodb+srv://admin:5zaVgCQFkqlJW3Z1@cluster0.sbua2r4.mongodb.net/public?retryWrites=true&w=majority"
 
-const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
-// const CONNECTION_URL = process.env.CONNECTION_URL1;
+mongoose.connect(DATABASE_URL, { useNewUrlParser: true})
 
-const PORT = process.env.PORT || 5000;
+const db = mongoose.connection
+db.on('error', error => console.error(error))
+db.once('open', () => console.log('Connected to Mongoose'))
 
- mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-     .then(() => app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)))
-     .catch((error) => console.log(error.message));
+app.get("/getCourses", (req, res) => {
+    courses.CourseCollection.find({}, (err, result) => {
+        if (err) {
+          res.json(err);
+        } else {
+          res.json(result);
+        }
+      })
+  });
+  app.post("/createUser", async (req, res) => {
+    const user = req.body;
+    const newUser = new User(user);
+    await newUser.save();
+  
+    res.json(user);
+  });
+  
 
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => console.log(`Server running on port: ${PORT}`))
