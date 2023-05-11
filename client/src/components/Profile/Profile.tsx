@@ -1,13 +1,20 @@
 import React, { useState, FC } from "react";
-
-import { Semester, track } from "../../constants/Track";
+import Popup from 'reactjs-popup';//for pop up
 import { Course } from "../../types/course";
 import { courses } from "../../constants/Course";
 import { user } from "../../constants/User";
+import { Semester, track } from "../../constants/Track";
+
 import { Avatar, Dialog, FormControl, Select, MenuItem, InputLabel, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { User } from "../../types/user";
-
+let initialValues = {
+  name: '',
+  email: '',
+  bio: '',
+  graduation: '',
+  major: ''
+}
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
   const [open, setOpen] = React.useState(false);
   const [openGenerate, setGenerateOpen] = React.useState(false);
@@ -16,6 +23,53 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
     setOpen(true);
   };
 
+  const [quote, setQuote] = useState(initialValues);
+  const onChange = (e: { target: { name: any; value: any; }; }) => {
+    setQuote({ ...quote, [e.target.name]: e.target.value });
+  }
+  //const { userData, setUserData } = useContext(UserContext);
+  //for testing purposes
+  //const UserDataTest = {user: user, track: null};
+  //setUserData(UserDataTest);
+  
+  function onProfileFormSubmit(this: any) {
+
+
+    /*
+    userData!.user!.name = quote.name;
+    userData!.user!.bio = quote.bio;
+    userData!.user!.email = quote.email;
+    userData!.user!.graduation = { year: 2024, season: quote.graduation };
+    userData!.user!.major = quote.major;
+
+    */
+    /*
+    const user = {
+      id: userData?.user.id,
+      name: quote.name,
+      bio: quote.bio,
+      email: quote.email,
+      createdAt: userData?.user?.taken_courses,
+      avatar: userData?.user.avatar,
+      graduation: {
+          year: quote.graduation,
+          season: quote.graduation,
+      },
+      subfield: userData?.user.subfield,
+      major: quote.major,
+      taken_courses: userData?.user.taken_courses,
+      planned_courses: userData?.user.taken_courses,
+  }*/
+
+
+    //
+    //track is not modified
+    //const userDataType = {user: user, track: userData?.track};
+    //setUserData(userData);
+    //do stuff
+    
+  }
+  const now = new Date();
   const handleClose = () => {
     setOpen(false);
 
@@ -35,10 +89,176 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
     <div className="container grid grid-cols-4 mx-auto gap-8  p-8">
       <div className="lg:col-span-1 col-span-4 shadow-sm rounded-xl border border-gray-200 px-8 py-8 overflow-hidden">
         <div className="flex flex-col relative ">
-          <img src={"https://www.umass.edu/sites/default/files/2023-03/UMass_Seal_Medium_PMS_202_0.png"} className="rounded-lg shadow-lg h-44 w-44 mb-6 object-cover absolute -top-16 -right-16 opacity-5 saturate-0"></img>
+          <div className="flex flex-col">
+            <div className="flex flex-row justify-between">
+              <img src={"https://www.umass.edu/sites/default/files/2023-03/UMass_Seal_Medium_PMS_202_0.png"} className="rounded-lg shadow-lg h-44 w-44 mb-6 object-cover absolute -top-16 -right-16 opacity-5 saturate-0"></img>
 
-          <img className="w-32 h-32 rounded-full object-cover" src={user.avatar} alt="Profile Picture" />
+              <img className="w-32 h-32 rounded-full object-cover" src={user.avatar} alt="Profile Picture" />
 
+              <Popup trigger=
+                {<button className="bg-black text-white px-8 py-10 rounded-lg" >Change profile</button>}//only half of the button works 
+                position="right center">
+                <form onSubmit={onProfileFormSubmit} onSubmitCapture={onProfileFormSubmit}>
+                  <fieldset>
+                    <div className="relative left-0 top-32 h-64 flex flex-col justify-center min-h-screen overflow-hidden ">
+                      //
+                      <div className="w-full  p-6 m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring-2 ring-indigo-600 lg:max-w-xl">
+                        <h1 className="text-3xl font-semibold text-center text-indigo-700 underline uppercase ">
+                          Edit Profile Form
+                        </h1>
+                        <form className="mt-6">
+                          <div className="mb-2">
+                            <label>
+                              <span className="text-gray-700">Your name</span>
+                              <input
+                                type="text"
+                                value={quote.name || ""}
+                                name="name"
+                                onChange={onChange}
+                                className="
+
+            w-full
+            block px-16 py-2 mt-2
+            border-gray-300
+            rounded-md
+            shadow-sm
+            focus:border-indigo-300
+            focus:ring
+            focus:ring-indigo-200
+            focus:ring-opacity-50
+          "
+                                placeholder="John Smith"
+                              />
+                            </label>
+                          </div>
+                          <div className="mb-2">
+                            <label>
+                              <span className="text-gray-700">Email address</span>
+                              <input
+                                name="email"
+                                type="email"
+                                onChange={onChange}
+                                value={quote.email || ""}
+                                className="
+            block
+            w-full
+            mt-2 px-16 py-2
+            border-gray-300
+            rounded-md
+            shadow-sm
+            focus:border-indigo-300
+            focus:ring
+            focus:ring-indigo-200
+            focus:ring-opacity-50
+          "
+                                placeholder="jsmith@umass.edu"
+                                required
+                              />
+                            </label>
+                          </div>
+                          <div className="mb-2">
+                            <label>
+                              <span className="text-gray-700">Your Major</span>
+                              <input
+                                type="text"
+                                name="major"
+                                onChange={onChange}
+                                value={quote.major || ""}
+                                className="
+
+            w-full
+            block px-16 py-2 mt-2
+            border-gray-300
+            rounded-md
+            shadow-sm
+            focus:border-indigo-300
+            focus:ring
+            focus:ring-indigo-200
+            focus:ring-opacity-50
+          "
+                                placeholder="Computer Science"
+                              />
+                            </label>
+                          </div>
+                          <div className="mb-2">
+                            <label>
+                              <span className="text-gray-700">Your Graduation Semester</span>
+                              <input
+                                type="text"
+                                name="graduation"
+                                onChange={onChange}
+                                value={quote.graduation || ""}
+                                className="
+
+            w-full
+            block px-16 py-2 mt-2
+            border-gray-300
+            rounded-md
+            shadow-sm
+            focus:border-indigo-300
+            focus:ring
+            focus:ring-indigo-200
+            focus:ring-opacity-50
+          "
+                                placeholder="John Smith"
+                              />
+                            </label>
+                          </div>
+                          <div className="mb-2">
+                            <label>
+                              <span className="text-gray-700">Bio</span>
+                              <textarea
+                                name="bio"
+                                onChange={onChange}
+                                value={quote.bio || ""}
+                                className="
+            block
+            w-full
+            mt-2 px-16 py-8
+            border-gray-300
+            rounded-md
+            shadow-sm
+            focus:border-indigo-300
+            focus:ring
+            focus:ring-indigo-200
+            focus:ring-opacity-50
+          "
+
+                              ></textarea>
+                            </label>
+                          </div>
+
+                          <div className="mb-submit">
+                            <button
+                              type="submit"
+                              onClick={onProfileFormSubmit}
+                              className="
+            h-10
+            px-5
+            text-indigo-100
+            bg-indigo-700
+            rounded-lg
+            transition-colors
+            duration-150
+            focus:shadow-outline
+            hover:bg-indigo-800
+          "
+                            >
+                              Update Profile
+                            </button>
+                          </div>
+
+                        </form>
+                      </div>
+                    </div>
+
+                  </fieldset>
+
+                </form>
+              </Popup>
+
+            </div>
+          </div>
           <h1 className="text-2xl font-bold mt-4">{user.name}</h1>
           <a className="text-sm text-blue-500 underline" href={`mailto:${user.email}`}>{user.email}</a>
           <p className="text-sm mt-4"><strong>Major: </strong> {user.major}</p>
