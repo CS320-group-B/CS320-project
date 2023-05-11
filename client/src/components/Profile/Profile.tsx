@@ -12,31 +12,35 @@ import Q from "q";
 
 let initialValues = {
   name: '',
-  email:'',
-  bio:'',
-  graduation:'',
-  major:''
+  email: '',
+  bio: '',
+  graduation: '',
+  major: ''
 }
 
 const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
 
- 
+
   const [quote, setQuote] = useState(initialValues);
   const onChange = (e: { target: { name: any; value: any; }; }) => {
     setQuote({ ...quote, [e.target.name]: e.target.value });
   }
-  const {userData, setUserData } = useContext(UserContext);
-  function onProfileFormSubmit() {    
-    
-   
-    
+  //const { userData, setUserData } = useContext(UserContext);
+  //for testing purposes
+  //const UserDataTest = {user: user, track: null};
+  //setUserData(UserDataTest);
+  
+  function onProfileFormSubmit(this: any) {
+
+
+    /*
     userData!.user!.name = quote.name;
     userData!.user!.bio = quote.bio;
     userData!.user!.email = quote.email;
-    userData!.user!.graduation = {year: 2024, season:quote.graduation};
+    userData!.user!.graduation = { year: 2024, season: quote.graduation };
     userData!.user!.major = quote.major;
 
-
+    */
     /*
     const user = {
       id: userData?.user.id,
@@ -54,13 +58,13 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
       taken_courses: userData?.user.taken_courses,
       planned_courses: userData?.user.taken_courses,
   }*/
-  
-  
-  //
-  //track is not modified
+
+
+    //
+    //track is not modified
     //const userDataType = {user: user, track: userData?.track};
-    setUserData(userData);
-     //do stuff
+    //setUserData(userData);
+    //do stuff
     
   }
   const now = new Date();
@@ -92,7 +96,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
               <Popup trigger=
                 {<button className="bg-black text-white px-8 py-10 rounded-lg" >Change profile</button>}//only half of the button works 
                 position="right center">
-                <form onSubmit={onProfileFormSubmit}>
+                <form onSubmit={onProfileFormSubmit} onSubmitCapture={onProfileFormSubmit}>
                   <fieldset>
                     <div className="relative left-0 top-32 h-64 flex flex-col justify-center min-h-screen overflow-hidden ">
                       //
@@ -132,7 +136,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                                 name="email"
                                 type="email"
                                 onChange={onChange}
-                                value={quote.email ||""}
+                                value={quote.email || ""}
                                 className="
             block
             w-full
@@ -157,7 +161,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                                 type="text"
                                 name="major"
                                 onChange={onChange}
-                                value={quote.major ||""}
+                                value={quote.major || ""}
                                 className="
 
             w-full
@@ -181,7 +185,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                                 type="text"
                                 name="graduation"
                                 onChange={onChange}
-                                value={quote.graduation ||""}
+                                value={quote.graduation || ""}
                                 className="
 
             w-full
@@ -204,7 +208,7 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                               <textarea
                                 name="bio"
                                 onChange={onChange}
-                                value={quote.bio ||""}
+                                value={quote.bio || ""}
                                 className="
             block
             w-full
@@ -222,9 +226,10 @@ const Profile: FC/*<IProfile>*/ = (/*{user}*/) => {
                             </label>
                           </div>
 
-                          <div className="mb-6">
+                          <div className="mb-submit">
                             <button
                               type="submit"
+                              onClick={onProfileFormSubmit}
                               className="
             h-10
             px-5
