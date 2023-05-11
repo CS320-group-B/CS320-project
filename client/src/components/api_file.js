@@ -45,11 +45,10 @@ export const login = async (userData) => {
 }
 
 export const getUser = async (userData) => {
-    // userData should have an id field
+    // Needs an id but I suppose it should be in the web token?
     const config = {
         method: "get",
-        url: `${devUrl}/user/${userData.id}`,
-        data: userData
+        url: `${devUrl}/user`
     }
 
     var result;
@@ -64,10 +63,11 @@ export const getUser = async (userData) => {
 }
 
 export const updateUser = async (userData) => {
-    // userData should have id/newUser
+    // userData should have upd which is what the user should be updated to
     const config = {
-        method: "post",
-        url: `${devUrl}/user/${userData.id}`,
+        method: "put",
+        url: `${devUrl}/user`,
+        data: userData
     }
 
     var result;
@@ -82,10 +82,10 @@ export const updateUser = async (userData) => {
 }
 
 export const deleteUser = async (userData) => {
-    // userData should have id
+    // Needs an id but I suppose it should be in the web token?
     const config = {
         method: "delete",
-        url: `${devUrl}/user/${userData.id}`,
+        url: `${devUrl}/user`,
     }
 
     var result;
@@ -99,11 +99,48 @@ export const deleteUser = async (userData) => {
     return result;
 }
 
-export const addCourse = async (userData) => {
-    // userData should have number field
+export const addTakenCourseForUser = async (userData) => {
+    // userData should have course_key to signify the added course
     const config = {
-        method: "post",
-        url: `${devUrl}/course`,
+        method: "put",
+        url: `${devUrl}/user/addTaken`,
+        data: userData
+    }
+
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const getTakenCourseForUser = async (userData) => {
+    // Needs an id but I suppose it should be in the web token?
+    const config = {
+        method: "get",
+        url: `${devUrl}/user/taken`,
+    }
+
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const removeTakenCourseForUser = async (userData) => {
+    // userData should have course_key to signify the added course
+    const config = {
+        method: "delete",
+        url: `${devUrl}/user/removeTaken`,
         data: userData
     }
 
@@ -153,43 +190,6 @@ export const getCourse = async (userData) => {
     return result;
 }
 
-export const updateCourse = async (userData) => {
-    // userData should have an id field and optionally the fields you want to update
-    var config = {
-        method: 'put',
-        url: `${devUrl}/course/${userData.id}`,
-        data: userData
-      };
-      
-    var result;
-    await axios(config)
-    .then(function (response) {
-        result = response.data
-    })
-    .catch(function (error) {
-        result = error;
-    });
-    return result;
-}
-
-export const deleteCourse = async (userData) => {
-    // userData should have an id field
-    var config = {
-        method: 'delete',
-        url: `${devUrl}/course/${userData.id}`
-      };
-      
-    var result;
-    await axios(config)
-    .then(function (response) {
-        result = response.data
-    })
-    .catch(function (error) {
-        result = error;
-    });
-    return result;
-}
-
 export const getAllProfessors = async (userData) => {
     var config = {
         method: 'get',
@@ -207,10 +207,85 @@ export const getAllProfessors = async (userData) => {
     return result;
 }
 
-export const getAllSections = async (userData) => {
+export const getProfessor = async (userData) => {
+    // userData should have an id field
     var config = {
         method: 'get',
-        url: `${devUrl}/section`
+        url: `${devUrl}/professor/${userData.id}`
+      };
+      
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const addEnrollment = async (userData) => {
+    // userData should have year/season/course_key/date
+    var config = {
+        method: 'post',
+        url: `${devUrl}/enrollment/enroll`,
+        data: userData
+      };
+      
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const getEnrollment = async (userData) => {
+    var config = {
+        method: 'get',
+        url: `${devUrl}/enrollment`
+      };
+      
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const updateEnrollment = async (userData) => {
+    // userData should have year/season/course_key/date
+    var config = {
+        method: 'put',
+        url: `${devUrl}/enrollment`,
+        data: userData
+      };
+      
+    var result;
+    await axios(config)
+    .then(function (response) {
+        result = response.data
+    })
+    .catch(function (error) {
+        result = error;
+    });
+    return result;
+}
+
+export const deleteEnrollment = async (userData) => {
+    // userData should have course_key
+    var config = {
+        method: 'delete',
+        url: `${devUrl}/enrollment/unenroll`,
+        data: userData
       };
       
     var result;
