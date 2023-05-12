@@ -70,12 +70,20 @@ const Login = () => {
       password: "",
     },
     onSubmit: async (values: any) => {
+      
       // const user = await login(values);
       // console.log(user);
       const data = {
         user: user,
         track: track,
       };
+      /*
+      if(user!=null){
+        const data = {
+          user: user,
+          track: track,
+        };
+      }*/
       context.setUserData(data);
       //localStorage.setItem("data", JSON.stringify(data));
       navigate("/profile");
