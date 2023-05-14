@@ -12,7 +12,7 @@ const courseSchema = mongoose.Schema({
     professors: [String],
     subject: String,
     description: String,
-    prerequisites: [String]
+    prerequisites: [prerequisitesSchema]
 });
 
 const Course = mongoose.model('Course', courseSchema)

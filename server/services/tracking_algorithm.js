@@ -20,6 +20,7 @@ const rankCourses = async (coursesTaken, preferences) => {
       }
 
       // Check if the course has any prerequisites that have not been taken
+      console.log(course);
       const hasSatisfiedPrerequisites = course.prerequisites.some((prerequisite) => {
         return prerequisite.options.every((option) => coursesTaken.includes(option));
       }) || course.prerequisites.length == 0;

@@ -1,5 +1,5 @@
 const { Course } = require('../models/course.js'); // import the Course mongoose model
-
+const { rankCourses } = require('../services/tracking_algorithm.js');
 // @desc    Get all courses
 const getCourses = async (req, res) => {
     try {
@@ -54,4 +54,15 @@ const deleteCourse = async (req, res) => {
     }
 };
 
-module.exports = { getCourses, getCourse, addCourse, updateCourse, deleteCourse};
+const rankCourse = async (req, res) => {
+    const { coursesTaken, preferences } = req.body;
+  
+    try {
+      const { courses, token } = await rankCourses(coursesTaken, preferences);
+  
+      res.status(200).json({ result: courses, token });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+};
+module.exports = { getCourses, getCourse, addCourse, updateCourse, deleteCourse, rankCourse};
