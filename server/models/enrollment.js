@@ -4,9 +4,8 @@ const enrollmentSchema = mongoose.Schema({
     id: String,
     year: Number,
     season: String,
-    student_id: String,
-    courseKey: String,
-    sectionKey: Number,
+    student_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    course_key: { type: String, required: true },
     date: Date
 });
 
