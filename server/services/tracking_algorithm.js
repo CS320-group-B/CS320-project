@@ -1,8 +1,9 @@
 const { Graph, alg } = require('graphlib');
 const { Course } = require('../models/course.js');
+const { Section } = require('../models/section.js');
 const { Professor } = require('../models/professor.js');
 
-const rankCourses = async (coursesTaken, preferences) => {
+const rankCourses = async (coursesTaken, preferences, season) => {
   try {
     const courses = await Course.find();
     const professors = await Professor.findOne({"key": 'karkar-ravi'});
@@ -19,14 +20,24 @@ const rankCourses = async (coursesTaken, preferences) => {
         continue;
       }
 
+      // Check season of the course
+      const sections = [{season: 'Fall'}, {season: 'Spring'}, {season: 'Summer'}];
+      const hasSatisfiedSeason = sections.some((section) => {
+        return section.season == season;
+      });
+
+      if (!hasSatisfiedSeason) {
+        scores.push(-9999);
+        continue;
+      }
+
       // Check if the course has any prerequisites that have not been taken
-      console.log(course);
       const hasSatisfiedPrerequisites = course.prerequisites.some((prerequisite) => {
         return prerequisite.options.every((option) => coursesTaken.includes(option));
       }) || course.prerequisites.length == 0;
 
       if (!hasSatisfiedPrerequisites) {
-        scores.push(-9999);
+        scores.push(-9000);
         continue;
       }
 
