@@ -21,11 +21,12 @@ const rankCourses = async (coursesTaken, preferences, season) => {
       }
 
       // Check season of the course
-      const sections = [{season: 'Fall'}, {season: 'Spring'}, {season: 'Summer'}];
+      const sections = await Section.find({ "course": course.key });
       const hasSatisfiedSeason = sections.some((section) => {
+        console.log(season == section.season);
         return section.season == season;
       });
-
+      console.log(hasSatisfiedSeason);
       if (!hasSatisfiedSeason) {
         scores.push(-9999);
         continue;
