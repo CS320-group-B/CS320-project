@@ -55,10 +55,10 @@ const deleteCourse = async (req, res) => {
 };
 
 const rankCourse = async (req, res) => {
-    const { coursesTaken, preferences } = req.body;
+    const { coursesTaken, preferences, season } = req.body;
   
     try {
-      const { courses, token } = await rankCourses(coursesTaken, preferences);
+      const { courses, token } = await rankCourses(coursesTaken, preferences, season);
   
       res.status(200).json({ result: courses, token });
     } catch (error) {

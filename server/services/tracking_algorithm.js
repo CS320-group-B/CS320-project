@@ -23,10 +23,8 @@ const rankCourses = async (coursesTaken, preferences, season) => {
       // Check season of the course
       const sections = await Section.find({ "course": course.key });
       const hasSatisfiedSeason = sections.some((section) => {
-        console.log(season == section.season);
         return section.season == season;
       });
-      console.log(hasSatisfiedSeason);
       if (!hasSatisfiedSeason) {
         scores.push(-9999);
         continue;
@@ -65,9 +63,6 @@ const rankCourses = async (coursesTaken, preferences, season) => {
       }
       score += total/professors.length;
 
-      // if (course.days.includes(1) || course.days.includes(3) || course.days.includes(5)) {
-      //   score += 1;
-      // }
       // Add the final score for the course to the scores array
       scores.push(score);
     }
@@ -86,9 +81,6 @@ const preferences = {
   endTime: "17:00",
   courseDays: [1, 3, 5]
 };
-
-// rankCourses(["COMPSCI 121", "COMPSCI 187"], preferences)
-// console.log(rankCourses(["COMPSCI 121", "COMPSCI 187"], preferences));
 
 const findProfessorByKey = async (key) => {
   const professor = await Professor.findOne({ "key": key });
@@ -125,8 +117,6 @@ function createGraph(courses) {
 
   return graph;
 }
-
-// const graph = createGraph(courses);
 
 // make graph all ancestors and descendants of a node
 function makeSubGraph(graph, key) {
@@ -166,7 +156,6 @@ function makeSubGraph(graph, key) {
   }
   // return the subgraph
   return subgraph;
-  // console.log(subgraph.edges());
 }
 
 // print the graph in dot format
@@ -409,59 +398,6 @@ const professors = [
 
 const score = scoreSchedule(schedule, preferences);
 //console.log(score); // outputs 12
-
-// ranks courses based on major requirements and student preferences
-function rankCourses2(coursesTaken, courses, preferences) {
-  // Initialize an empty array to store the scores for each course
-  const scores = [];
-
-  // Loop through each course
-  for (let i = 0; i < courses.length; i++) {
-    const course = courses[i];
-
-    // Check if the course has already been taken
-    if (coursesTaken.includes(course.key)) {
-      scores.push(-1);
-      continue;
-    }
-
-    // Check if the course has any prerequisites that have not been taken
-    const hasSatisfiedPrerequisites = course.prerequisites.some((prerequisite) => {
-      return prerequisite.options.every((option) => coursesTaken.includes(option));
-    }) || course.prerequisites.length == 0;
-
-    if (!hasSatisfiedPrerequisites) {
-      scores.push(-2);
-      continue;
-    }
-
-    // Calculate the score for the course based on major requirements and student preferences
-    let score = 0;
-
-    // Check if the course satisfies any major requirements
-    score += scoreCSRequirements(coursesTaken.concat(course.key)) - scoreCSRequirements(coursesTaken);
-
-    // Check if the course satisfies any student preferences
-    score += course.professors.reduce((total, professor) => {
-      const prof = findProfessorByKey(professor);
-      if (prof) {
-        return total + (prof.rating * preferences.professorRatingWeight - prof.difficulty * preferences.professorDifficultyWeight)/5;
-      }
-      return total;
-    }, 0);
-
-    // if (course.days.includes(1) || course.days.includes(3) || course.days.includes(5)) {
-    //   score += 1;
-    // }
-
-    // Add the final score for the course to the scores array
-    scores.push(score);
-  }
-  // Uses the scores array to return sorted ranked courses along with its score in descending order
-  return scores.map((score, index) => { return { score, course: courses[index].key } }).sort((a, b) => b.score - a.score);
-}
-
-//console.log(rankCourses(["COMPSCI 121", "COMPSCI 187"], courses, preferences));
 
 function creditsTaken(coursesTaken) {
   let credits = 0;
