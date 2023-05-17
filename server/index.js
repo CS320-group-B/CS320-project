@@ -25,8 +25,6 @@ app.use('/section', sectionRoutes);
 app.use('/enrollment', enrollmentRoutes);
 
 
-const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
-
 
 //const CONNECTION_URL = "mongodb+srv://user:123@cluster0.7sb85e6.mongodb.net/?retryWrites=true&w=majority";
 const CONNECTION_URL = process.env.DATABASE_URL;
