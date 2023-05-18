@@ -58,9 +58,9 @@ const rankCourse = async (req, res) => {
     const { coursesTaken, preferences, season } = req.body;
   
     try {
-      const { courses, token } = await rankCourses(coursesTaken, preferences, season);
+      const { courses } = await rankCourses(coursesTaken, preferences, season);
   
-      res.status(200).json({ result: courses, token });
+      res.status(200).json({ result: courses });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
