@@ -9,6 +9,7 @@ const getProfessors = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 };
+//@desc     get a single professor
 const getProf = async (req, res) => {
     try {
         const prof = await Professor.findOne({"key":req.params.id});
@@ -17,6 +18,7 @@ const getProf = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 };
+//@desc     create a professor
 const addProfessor = async (req, res) => {
     const prof = req.body;
     const newProf = new Professor(prof);
@@ -27,6 +29,7 @@ const addProfessor = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 };
+//@desc     update a given professor
 const updateProf = async (req, res) => { 
     try {
         const updatedProf = await Course.findOneAndUpdate({"_id": req.params.id}, req.body , {new: true});
@@ -36,6 +39,7 @@ const updateProf = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 };
+//@desc     delete a given professor
 const deleteProf = async (req, res) => {
     try {
         const prof = await Professor.findOneAndRemove({"_id": req.params.id});

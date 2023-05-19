@@ -47,7 +47,7 @@ const updateUser = async (req, res) => {
         if (upd.hasOwnProperty("taken")){delete upd.taken;}// use add/remove taken to update taken array
 
         const updatedUser = await User.findOneAndUpdate({"_id": req.userId}, upd, {new: true});
-        if (!updatedUser){return res.status(404).json("User not found");}
+        if (!updatedUser){return res.status(404).json({ message: "User not found" });}
         res.status(200).json(updatedUser);
     } catch (error){
         res.status(404).json({ message: error.message})
@@ -112,7 +112,7 @@ const signup = async (req, res) => {
 const addTaken = async (req, res) => { 
     try{
         let updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$addToSet: {"taken": req.body.course_key}}, {new: true});
-        if (!updatedUser){return res.status(404).json("User not found");}
+        if (!updatedUser){return res.status(404).json({ message: "User not found" });}
         res.status(200).json(updatedUser);
     } catch (error){
         res.status(404).json({ message: error.message})
@@ -122,13 +122,13 @@ const addTaken = async (req, res) => {
 const removeTaken = async (req, res) => { 
     try{
         let updatedUser = await User.findOneAndUpdate({"_id": req.userId}, {$pull: {"taken":req.body.course_key}}, {new: true});
-        if (!updatedUser){return res.status(404).json("User not found");}
+        if (!updatedUser){return res.status(404).json({ message: "User not found" });}
         res.status(200).json(updatedUser);
     } catch (error){
         res.status(404).json({ message: error.message})
     }
 };
-// @desc rget taken courses for a user
+// @desc get taken courses for a user
 const getTaken = async(req,res) =>{
     try {
         const user = await User.findById(req.userId);
