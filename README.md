@@ -15,7 +15,7 @@ Client:
 Server: We use Express JS for the server connected to a MongoDB database. The server folder contains the main index.js file from which the server is set to listen to requests. It also contains code for GET and POST requests. The models folder contains the mongoose database schemas for users, courses, professors, etc. The middleware folder contains necessary code for authentication and updating passwords. 
 
 
-Database:
+Database: We use MongoDB to store our data such as users, courses, professors, and enrollments. To populate the course and professor data we scraped the UMass course listings and professor pages. 
 
 
 API Documentation: https://docs.google.com/document/d/1-hNFd_gt6fODLHWzw4m79Q-yHjGQ_HSf2BiwnFdEyXU/edit
